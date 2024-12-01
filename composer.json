@@ -40,7 +40,6 @@
         "symfony/string": "7.1.*",
         "symfony/translation": "7.1.*",
         "symfony/twig-bundle": "7.1.*",
-        "symfony/ux-autocomplete": "^2.21",
         "symfony/ux-icons": "^2.21",
         "symfony/ux-live-component": "^2.21",
         "symfony/ux-toggle-password": "^2.21",
