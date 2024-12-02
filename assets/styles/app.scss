@@ -1,43 +1,49 @@
-@import "bootstrap/scss/utilities";
-@import "bootstrap/scss/functions";
-@import "bootstrap/scss/variables";
-@import "bootstrap/scss/bootstrap";
+// @import "bootstrap/scss/utilities";
+// @import "bootstrap/scss/functions";
+// @import "bootstrap/scss/variables";
+// @import "bootstrap/scss/bootstrap";
 
-// couleurs du site 
-$background: #FCFCFC;
-$background-violet: #DCDDFE;
-$footer-background: #261133;
-$connexion-btn:#671DD1;
-$bg-orange: #FE4F36;
+:root {
+  /* Couleurs principales */
+  --background: #fcfcfc;
+  --background-violet: #dcddfe;
+  --footer-background: #261133;
+  --connexion-btn: #671dd1;
+  --bg-orange: #fe4f36;
 
-$body-bg: $background;
-$primary: $bg-orange;
-$secondary: $background-violet;
-$btn-primary: $connexion-btn;
+  /* Couleurs Bootstrap personnalisées */
+  --body-bg: var(--background);
+  --primary: var(--bg-orange);
+  --secondary: var(--background-violet);
+  --btn-primary: var(--connexion-btn);
+}
 
+/* Bouton connexion */
 .btn-connexion {
-    --bs-btn-color: #fff;
-    --bs-btn-bg: $connexion-btn;
-    --bs-btn-border-color: $connexion-btn;
-    --bs-btn-hover-color: $background-violet;
-    --bs-btn-hover-bg: $connexion-btn;
-    --bs-btn-hover-border-color: $background-violet;
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--connexion-btn);
+  --bs-btn-border-color: var(--connexion-btn);
+  --bs-btn-hover-color: var(--background-violet);
+  --bs-btn-hover-bg: var(--connexion-btn);
+  --bs-btn-hover-border-color: var(--background-violet);
 }
 
+/* Bouton action */
 .btn-action {
-    --bs-btn-color: #fff;
-    --bs-btn-bg: $bg-orange;
-    --bs-btn-border-color: $bg-orange;
-    --bs-btn-hover-color: $background-violet;
-    --bs-btn-hover-bg: $bg-orange;
-    --bs-btn-hover-border-color: $background-violet;
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--bg-orange);
+  --bs-btn-border-color: var(--bg-orange);
+  --bs-btn-hover-color: var(--background-violet);
+  --bs-btn-hover-bg: var(--bg-orange);
+  --bs-btn-hover-border-color: var(--background-violet);
 }
 
+/* Bouton catégorie */
 .btn-category {
-    --bs-btn-color: $bg-orange;
-    --bs-btn-bg: transparent;
-    --bs-btn-border-color: $bg-orange;
-    --bs-btn-hover-color: $background-violet;
-    --bs-btn-hover-bg: transparent;
-    --bs-btn-hover-border-color: $background-violet;
+  --bs-btn-color: var(--bg-orange);
+  --bs-btn-bg: transparent;
+  --bs-btn-border-color: var(--bg-orange);
+  --bs-btn-hover-color: var(--background-violet);
+  --bs-btn-hover-bg: transparent;
+  --bs-btn-hover-border-color: var(--background-violet);
 }
