@@ -1,15 +1,15 @@
 {% block javascripts %}
 	<script type="module">
-		import '{{ asset('js/menu.js') }}';
+		import "{{ asset('js/menu.js') }}";
 	</script>
 {% endblock %}
 
 <header>
 	{% set _route = app.request.get('_route') %}
 	{% set navItems =  [
-        {'route': 'app_discover', 'title': 'menu.discover'},
-        {'route': 'app_details', 'title': 'menu.details'},
-        {'route': 'app_event', 'title': 'menu.event'},
+        {'route': 'app_discover', 'title': 'Découvrir'},
+        {'route': 'app_details', 'title': 'A propos'},
+        {'route': 'app_event_index', 'title': 'Créer un événement'},
         ]
     %}
 	<div class="container py-2">
@@ -17,19 +17,24 @@
 			<a href="{{ path('app_home') }}" class="navbar-brand">
 				<img src="{{ asset('img/SkillShare.svg') }}" alt="SkillShare">
 			</a>
-			<ul class="nav">
-				<li class="nav-item mx-3">
-					<a class="btn border border-dark rounded-pill nav-link py-1" href="#">Découvrir</a>
-				</li>
-				<li class="nav-item mx-3">
-					<a class="btn border border-dark rounded-pill nav-link py-1" href="#">À propos</a>
-				</li>
+			<ul class="nav" {% if not is_granted('IS_AUTHENTICATED_FULLY') %} data-bs-toggle="modal" data-bs-target="#modalLogin" {% endif %}>
+				{% for item in navItems|slice(0, 2)%}
+					<li class="nav-item mx-3">
+						<a class="btn border border-dark rounded-pill nav-link py-1" href="{{ path(item.route) }}">
+							{{item.title}}
+						</a>
+					</li>
+				{% endfor %}
 			</ul>
 			<ul class="nav">
-				<li class="nav-item">
-					<a class="btn border border-dark rounded-pill nav-link mx-3 py-1" href="#">Créer un événement</a>
+				<li class="nav-item mx-3">
+					{% for item in navItems|slice(2)%}
+						<a class="btn border border-dark rounded-pill nav-link mx-3 py-1" href="{{ path(item.route) }}">
+							{{item.title}}
+						</a>
+					{% endfor %}
 				</li>
-				<li class="nav-item">
+				<li class="nav-item mx-3">
 					<a class="btn btn-connexion rounded-pill py-1" href="#">Connexion</a>
 				</li>
 			</ul>
