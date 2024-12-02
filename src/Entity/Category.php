@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -10,6 +11,7 @@ use App\Entity\Event;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
+#[ApiResource]
 class Category
 {
     #[ORM\Id]
@@ -30,37 +32,34 @@ class Category
     public function __construct()
     {
         $this->events = new ArrayCollection();
+    }
+
+    public function getEvents(): Collection
+    {
+        return $this->events;
+    }
+
+    public function addEvent(Event $event): static
+    {
+        if (!$this->events->contains($event)) {
+            $this->events->add($event);
+            $event->setCategory($this);
         }
-    
-        /**
-         * @return Collection<int, Event>
-         */
-        public function getEvents(): Collection
-        {
-            return $this->events;
-        }
-    
-        public function addEvent(Event $event): static
-        {
-            if (!$this->events->contains($event)) {
-                $this->events->add($event);
-                $event->setCategory($this);
+
+        return $this;
+    }
+
+    public function removeEvent(Event $event): static
+    {
+        if ($this->events->removeElement($event)) {
+            // set the owning side to null (unless already changed)
+            if ($event->getCategory() === $this) {
+                $event->setCategory(null);
             }
-    
-            return $this;
         }
-    
-        public function removeEvent(Event $event): static
-        {
-            if ($this->events->removeElement($event)) {
-                // set the owning side to null (unless already changed)
-                if ($event->getCategory() === $this) {
-                    $event->setCategory(null);
-                }
-            }
-    
-            return $this;
-        }
+
+        return $this;
+    }
 
     public function getId(): ?int
     {
