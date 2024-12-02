@@ -20,30 +20,30 @@
 
 /* Bouton connexion */
 .btn-connexion {
-  --bs-btn-color: #fff;
-  --bs-btn-bg: var(--connexion-btn);
-  --bs-btn-border-color: var(--connexion-btn);
-  --bs-btn-hover-color: var(--background-violet);
-  --bs-btn-hover-bg: var(--connexion-btn);
-  --bs-btn-hover-border-color: var(--background-violet);
+  --bs-btn-color: #fff !important;
+  --bs-btn-bg: var(--connexion-btn) !important;
+  --bs-btn-border-color: var(--connexion-btn) !important;
+  --bs-btn-hover-color: var(--connexion-btn) !important;
+  --bs-btn-hover-bg: var(--background-violet) !important;
+  --bs-btn-hover-border-color: var(--background-violet) !important;
 }
 
 /* Bouton action */
 .btn-action {
-  --bs-btn-color: #fff;
-  --bs-btn-bg: var(--bg-orange);
-  --bs-btn-border-color: var(--bg-orange);
-  --bs-btn-hover-color: var(--background-violet);
-  --bs-btn-hover-bg: var(--bg-orange);
-  --bs-btn-hover-border-color: var(--background-violet);
+  --bs-btn-color: #fff !important;
+  --bs-btn-bg: var(--bg-orange) !important;
+  --bs-btn-border-color: var(--bg-orange) !important;
+  --bs-btn-hover-color: var(--background-violet) !important;
+  --bs-btn-hover-bg: var(--bg-orange) !important;
+  --bs-btn-hover-border-color: var(--background-violet) !important;
 }
 
 /* Bouton catégorie */
 .btn-category {
-  --bs-btn-color: var(--bg-orange);
-  --bs-btn-bg: transparent;
-  --bs-btn-border-color: var(--bg-orange);
-  --bs-btn-hover-color: var(--background-violet);
-  --bs-btn-hover-bg: transparent;
-  --bs-btn-hover-border-color: var(--background-violet);
+  --bs-btn-color: var(--bg-orange) !important;
+  --bs-btn-bg: transparent !important;
+  --bs-btn-border-color: var(--bg-orange) !important;
+  --bs-btn-hover-color: var(--background-violet) !important;
+  --bs-btn-hover-bg: transparent !important;
+  --bs-btn-hover-border-color: var(--background-violet) !important;
 }
