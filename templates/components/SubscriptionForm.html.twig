@@ -1,0 +1,57 @@
+<h1 class="d-flex justify-content-center fs-3 m-4">Bienvenue parmi nous !</h1>
+
+<div class="container">
+	<div class="row justify-content-center" {{ attributes }}>
+		<div class="col-10">
+			{{ form_start(form, {
+                form: form,
+                attr: {
+                    'data-action': 'live#action:prevent',
+                    'data-live-action-param': 'save'
+                }
+            }) }}
+			<div class="form-floating mb-3">
+				{{ form_widget(form.firstname, {'attr': {'class': 'form-control', 'placeholder': 'Prénom'}}) }}
+				{{ form_label(form.firstname, null, {'label_attr': {'class': 'form-label'}}) }}
+			</div>
+		</div>
+	</div>
+	<div class="row justify-content-center">
+		<div class="col-10">
+			<div class="form-floating mb-3">
+				{{ form_widget(form.lastname, {'attr': {'class': 'form-control', 'placeholder': 'Nom'}}) }}
+				{{ form_label(form.lastname, null, {'label_attr': {'class': 'form-label'}}) }}
+			</div>
+		</div>
+	</div>
+	<div class="row justify-content-center">
+		<div class="col-10">
+			<div class="form-floating mb-3">
+				{{ form_widget(form.email, {'attr': {'class': 'form-control', 'placeholder': 'Adresse e-mail'}}) }}
+				{{ form_label(form.email, null, {'label_attr': {'class': 'form-label'}}) }}
+			</div>
+		</div>
+	</div>
+	<div class="row justify-content-center">
+		<div class="col-10">
+			<div class="form-floating mb-3">
+				{{ form_widget(form.plainPassword.password.first, {'attr': {'class': 'form-control', 'placeholder': 'Mot de passe'}}) }}
+				{{ form_label(form.plainPassword.password.first, null, {'label_attr': {'class': 'form-label'}}) }}
+			</div>
+		</div>
+	</div>
+	<div class="row justify-content-center">
+		<div class="col-10">
+			<div class="form-floating mb-3">
+				{{ form_widget(form.plainPassword.password.second, {'attr': {'class': 'form-control', 'placeholder': 'Confirmez le mot de passe'}}) }}
+				{{ form_label(form.plainPassword.password.second, null, {'label_attr': {'class': 'form-label'}}) }}
+			</div>
+		</div>
+	</div>
+	<div class="row justify-content-center">
+		<div class="col-10 d-flex justify-content-center">
+			<button type="submit" class="btn btn-connexion rounded-pill">S'inscrire</button>
+			{{ form_end(form) }}
+		</div>
+	</div>
+</div>

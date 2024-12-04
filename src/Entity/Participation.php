@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ParticipationRepository;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\User;
@@ -10,7 +9,6 @@ use App\Entity\Event;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ParticipationRepository::class)]
-#[ApiResource]
 class Participation
 {
     #[ORM\Id]
