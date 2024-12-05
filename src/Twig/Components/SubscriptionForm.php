@@ -10,11 +10,8 @@ use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\ComponentWithFormTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
-use Symfony\UX\LiveComponent\ComponentToolsTrait;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[AsLiveComponent('SubscriptionForm')]
@@ -22,6 +19,8 @@ class SubscriptionForm extends AbstractController
 {
     use DefaultActionTrait;
     use ComponentWithFormTrait;
+
+    private ?User $user = null;
 
     #[LiveProp]
     public ?User $initialFormData = null;
@@ -31,27 +30,33 @@ class SubscriptionForm extends AbstractController
         return $this->createForm(SubscriptionType::class, $this->initialFormData);
     }
 
+    #[LiveAction]
     public function save(EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher)
     {
+        $form = $this->getForm();
+        $plainPassword = $form->get('plainPassword')->get('password')->getData();
+
+        if (!empty($plainPassword)) {
+            $hashedPassword = $passwordHasher->hashPassword($this->user, $plainPassword);
+            $this->user->setPassword($hashedPassword);
+        }
+
         $this->submitForm();
 
-        $user = $this->getForm()->getData();
+        if (!$form->isValid()) {
+            return;
+        }
 
-        $hashedPassword = $passwordHasher->hashPassword($user, $user->getPassword());
+        $this->user = $form->getData();
+        $this->user->setPassword($passwordHasher->hashPassword($this->user, $plainPassword));
+        $this->user->setCreatedAt();
+        $this->user->setRoles(['ROLE_USER']);
 
-        $user->setCreatedAt(new \DateTime());
-        $user->setRoles(['ROLE_USER']);
-        $user->setPassword($hashedPassword);
-        
-
-
-        $entityManager->persist($user);
+        $entityManager->persist($this->user);
         $entityManager->flush();
 
         $this->addFlash('success', 'Votre compte a été créé avec succès !');
 
-        return $this->redirectToRoute('app_home', [
-            'id' => $user->getId(),
-        ]);
+        return $this->redirectToRoute('app_home');
     }
 }

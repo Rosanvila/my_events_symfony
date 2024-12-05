@@ -35,7 +35,6 @@ class SubscriptionType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Email',
                 ]
-
             ])
             ->add('plainPassword', PasswordConfirmType::class, [
                 'mapped' => false,
