@@ -15,6 +15,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[AsLiveComponent('SubscriptionForm')]
 class SubscriptionForm extends AbstractController
@@ -30,12 +31,20 @@ class SubscriptionForm extends AbstractController
         return $this->createForm(SubscriptionType::class, $this->initialFormData);
     }
 
-    #[LiveAction]
-    public function save(EntityManagerInterface $entityManager)
+    public function save(EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher)
     {
         $this->submitForm();
 
         $user = $this->getForm()->getData();
+
+        $hashedPassword = $passwordHasher->hashPassword($user, $user->getPassword());
+
+        $user->setCreatedAt(new \DateTime());
+        $user->setRoles(['ROLE_USER']);
+        $user->setPassword($hashedPassword);
+        
+
+
         $entityManager->persist($user);
         $entityManager->flush();
 
