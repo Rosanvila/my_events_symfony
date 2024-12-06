@@ -50,11 +50,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank]
     private ?string $lastname = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Assert\NotBlank]
-    private ?\DateTimeImmutable $createdAt = null;
-
-
     #[ORM\OneToMany(mappedBy: 'organizer', targetEntity: Event::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private ?Collection $events = null;
 
@@ -66,7 +61,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->events = new ArrayCollection();
         $this->participations = new ArrayCollection();
         $this->roles = ['ROLE_USER']; // default role
-        $this->createdAt = new \DateTimeImmutable();
     }
 
     /**
@@ -195,17 +189,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->lastname = $lastname;
 
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeInterface $createdAt = null): static
-    {
-        $this->createdAt = $createdAt ?? new \DateTimeImmutable();
         return $this;
     }
 }

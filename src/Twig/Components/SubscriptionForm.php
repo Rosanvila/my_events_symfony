@@ -34,22 +34,21 @@ class SubscriptionForm extends AbstractController
     public function save(EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher)
     {
         $form = $this->getForm();
-        $plainPassword = $form->get('plainPassword')->get('password')->getData();
+        $this->submitForm();
 
+        if (!$form->isValid()) {
+            $this->addFlash('error', 'Le formulaire contient des erreurs.');
+            return;
+        }
+
+        $this->user = $form->getData();
+
+        $plainPassword = $form->get('plainPassword')->getData();
         if (!empty($plainPassword)) {
             $hashedPassword = $passwordHasher->hashPassword($this->user, $plainPassword);
             $this->user->setPassword($hashedPassword);
         }
 
-        $this->submitForm();
-
-        if (!$form->isValid()) {
-            return;
-        }
-
-        $this->user = $form->getData();
-        $this->user->setPassword($passwordHasher->hashPassword($this->user, $plainPassword));
-        $this->user->setCreatedAt();
         $this->user->setRoles(['ROLE_USER']);
 
         $entityManager->persist($this->user);
