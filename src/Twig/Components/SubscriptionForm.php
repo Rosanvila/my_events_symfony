@@ -11,8 +11,10 @@ use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\ComponentWithFormTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\VarDumper\VarDumper;
 
 #[AsLiveComponent('SubscriptionForm')]
 class SubscriptionForm extends AbstractController
@@ -31,7 +33,7 @@ class SubscriptionForm extends AbstractController
     }
 
     #[LiveAction]
-    public function save(EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher)
+    public function save(EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, Security $security)
     {
         $form = $this->getForm();
         $this->submitForm();
@@ -43,19 +45,28 @@ class SubscriptionForm extends AbstractController
 
         $this->user = $form->getData();
 
-        $plainPassword = $form->get('plainPassword')->getData();
+        $plainPassword = $form->get('plainPassword')->get('password')->getData();
+
         if (!empty($plainPassword)) {
             $hashedPassword = $passwordHasher->hashPassword($this->user, $plainPassword);
             $this->user->setPassword($hashedPassword);
+        } else {
+            $this->addFlash('error', 'Le mot de passe ne peut pas être vide.');
+            return;
         }
 
         $this->user->setRoles(['ROLE_USER']);
 
-        $entityManager->persist($this->user);
-        $entityManager->flush();
+        try {
+            $entityManager->persist($this->user);
+            $entityManager->flush();
+            $this->addFlash('success', 'Votre compte a été créé avec succès !');
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Une erreur est survenue lors de l\'enregistrement de l\'utilisateur.');
+            return;
+        }
 
-        $this->addFlash('success', 'Votre compte a été créé avec succès !');
-
+        $security->login($this->user, 'form_login', 'main');
         return $this->redirectToRoute('app_home');
     }
 }

@@ -38,7 +38,7 @@ class PasswordConfirmType extends AbstractType
                             'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères',
                             'max' => 4096,
                         ]),
-                        new PasswordStrength(),
+                        new PasswordStrength([], 2),
                         new NotCompromisedPassword([
                             'message' => 'Ce mot de passe a été compromis. Veuillez en choisir un autre.',
                         ]),
