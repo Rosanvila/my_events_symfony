@@ -14,7 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\VarDumper\VarDumper;
+
 
 #[AsLiveComponent('SubscriptionForm')]
 class SubscriptionForm extends AbstractController
@@ -31,6 +31,7 @@ class SubscriptionForm extends AbstractController
     {
         return $this->createForm(SubscriptionType::class, $this->initialFormData);
     }
+
 
     #[LiveAction]
     public function save(EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, Security $security)
