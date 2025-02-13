@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "586738c7c4f4bd0223b2e137ac67edea",
+    "content-hash": "772da3b3a1e75b8410d53d1210692267",
     "packages": [
         {
             "name": "composer/semver",
@@ -86,6 +86,66 @@
                 }
             ],
             "time": "2024-09-19T14:15:21+00:00"
+        },
+        {
+            "name": "danielburger1337/2fa-email",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/danielburger1337/scheb-2fa-email.git",
+                "reference": "4006da9e5500d8e49937be701d3c855fbc179f90"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/danielburger1337/scheb-2fa-email/zipball/4006da9e5500d8e49937be701d3c855fbc179f90",
+                "reference": "4006da9e5500d8e49937be701d3c855fbc179f90",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.2",
+                "scheb/2fa-bundle": "^6.4 || ^7.0",
+                "symfony/clock": "^6.4 || ^7.0",
+                "symfony/framework-bundle": "^6.4 || ^7.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.23",
+                "phpstan/phpstan": "^1.10",
+                "phpunit/phpunit": "^10.5",
+                "symfony/mailer": "^6.4 || ^7.0",
+                "symfony/yaml": "^6.4 || ^7.0"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "danielburger1337\\SchebTwoFactorBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniel Burger",
+                    "homepage": "https://github.com/danielburger1337"
+                }
+            ],
+            "description": "Extends scheb/2fa-bundle with two-factor authentication via email",
+            "homepage": "https://github.com/danielburger1337/scheb-2fa-email",
+            "keywords": [
+                "2fa",
+                "Authentication",
+                "email",
+                "scheb-2fa",
+                "symfony",
+                "two-factor",
+                "two-step"
+            ],
+            "support": {
+                "issues": "https://github.com/danielburger1337/scheb-2fa-email/issues",
+                "source": "https://github.com/danielburger1337/scheb-2fa-email/tree/v1.1.0"
+            },
+            "time": "2024-04-19T23:08:05+00:00"
         },
         {
             "name": "doctrine/cache",
