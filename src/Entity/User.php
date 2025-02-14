@@ -9,35 +9,45 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use App\Entity\Event;
 use App\Entity\Participation;
+use danielburger1337\SchebTwoFactorBundle\Model\TwoFactorEmailInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFactorEmailInterface
 {
-    public function eraseCredentials(): void
+    private ?string $emailAuthCode = null;
+    private ?\DateTimeInterface $emailAuthCodeExpiresAt = null;
+
+    public function isEmailAuthEnabled(): bool
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        return true; // or implement your logic to enable/disable email authentication
     }
 
-    public function getUserIdentifier(): string
+    public function getEmailAuthRecipient(): string
     {
-        return (string) $this->email;
+        return $this->getEmail();
     }
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 180, unique: true)]
+    #[ORM\Column(type: "string", length: 180, unique: true)]
     #[Assert\NotBlank]
     #[Assert\Email]
     private ?string $email = null;
 
     #[ORM\Column]
     private ?string $password = null;
+
+    #[ORM\Column(type: "string", nullable: true)]
+    private ?string $authCode;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private $email_auth_code_expires_at;
 
     #[ORM\Column(type: Types::JSON)]
     private array $roles = [];
@@ -50,11 +60,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank]
     private ?string $lastname = null;
 
+    #[ORM\Column(type: 'boolean')]
+    private $isVerified = false;
+
     #[ORM\OneToMany(mappedBy: 'organizer', targetEntity: Event::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
-    private ?Collection $events = null;
+    private Collection $events;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Participation::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
-    private ?Collection $participations = null;
+    private Collection $participations;
 
     public function __construct()
     {
@@ -152,6 +165,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setVerified(bool $isVerified): static
+    {
+        $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
     public function getRoles(): array
     {
         return $this->roles;
@@ -190,5 +215,40 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->lastname = $lastname;
 
         return $this;
+    }
+
+    public function getEmailAuthCode(): string
+    {
+        if (null === $this->authCode) {
+            throw new \LogicException('The email authentication code was not set');
+        }
+
+        return $this->authCode;
+    }
+
+    public function setEmailAuthCode(string $authCode): void
+    {
+        $this->authCode = $authCode;
+    }
+
+    public function getEmailAuthCodeExpiresAt(): \DateTimeImmutable|null
+    {
+        return new \DateTimeImmutable($this->email_auth_code_expires_at->format('Y-m-d H:i:s'));
+    }
+
+    public function setEmailAuthCodeExpiresAt(\DateTimeImmutable $expiresAt): void
+    {
+        $this->email_auth_code_expires_at = $expiresAt;
+    }
+
+    public function eraseCredentials(): void
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
     }
 }

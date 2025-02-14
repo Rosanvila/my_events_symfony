@@ -14,7 +14,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use App\Security\EmailVerifier;
+use App\Service\Mailer\AuthCodeEmailGenerator;
+use Symfony\Component\Mailer\MailerInterface;
 
 #[AsLiveComponent('SubscriptionForm')]
 class SubscriptionForm extends AbstractController
@@ -22,7 +25,17 @@ class SubscriptionForm extends AbstractController
     use DefaultActionTrait;
     use ComponentWithFormTrait;
 
+
+    public function __construct(
+        private EmailVerifier $emailVerifier,
+        private AuthCodeEmailGenerator $authCodeEmailGenerator,
+        private MailerInterface $mailer
+    ) {
+        $this->mailer = $mailer;
+    }
+
     private ?User $user = null;
+
 
     #[LiveProp]
     public ?User $initialFormData = null;
@@ -62,6 +75,18 @@ class SubscriptionForm extends AbstractController
             $entityManager->persist($this->user);
             $entityManager->flush();
             $this->addFlash('success', 'Votre compte a été créé avec succès !');
+
+            $templatedEmail = (new TemplatedEmail())
+                ->to($this->user->getEmail())
+                ->subject('Bienvenue sur notre site !')
+                ->htmlTemplate('login/confirmation_email.html.twig');
+
+            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $this->user, $templatedEmail);
+
+            // Envoyer l'email avec le code d'authentification
+            $authCodeEmail = $this->authCodeEmailGenerator->createAuthCodeEmail($this->user);
+            $this->mailer->send($authCodeEmail);
+            
         } catch (\Exception $e) {
             $this->addFlash('error', 'Une erreur est survenue lors de l\'enregistrement de l\'utilisateur.');
             return;

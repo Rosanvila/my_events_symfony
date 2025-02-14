@@ -1,0 +1,12 @@
+{% extends 'security/email/base.html.twig' %}
+
+{% block title %}Code de vérification{% endblock %}
+{% block preheader %}Votre code de vérification{% endblock %}
+
+{% block body %}
+     Bonjour,
+
+     Voici votre code de vérification :
+     <p style="font-weight: bold;">{{ authCode }}</p>
+     Ce code est valide jusqu'à {{ expiresAt }}.
+{% endblock %}

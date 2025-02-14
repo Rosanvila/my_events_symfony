@@ -1,0 +1,12 @@
+{% extends 'security/email/base.html.twig' %}
+
+{% block body %}
+    <p>
+        Bonjour,
+
+        Veuillez confirmer votre adresse email en cliquant sur le lien suivant :
+        <a href="{{ signedUrl }}">{{ signedUrl }}</a>
+
+        Ce lien est valide jusqu'à {{ expiresAtMessageKey }}.
+    </p>
+{% endblock %}

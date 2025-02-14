@@ -6,5 +6,4 @@ scheb_two_factor:
     email:
         enabled: true
         digits: 6
-        sender_email: no-reply@skillshare.com
         

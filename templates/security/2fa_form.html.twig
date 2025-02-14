@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="container col-6">
+        {# Authentication errors #}
+        <div class="row justify-content-center">
+            <div class="col-6">
+                {% if authenticationError %}
+                    {% if authenticationErrorData|length == 0 %}
+                        <div class="row justify-content-center mt-3">
+                            <div class="alert alert-info justify-content-center d-flex" role="alert">
+                                Une erreur d'authentification est survenue.
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="row justify-content-center mt-3">
+                            <div class="alert alert-info justify-content-center d-flex" role="alert">
+                                {{ authenticationError }}
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+
+        {# Let the user select the authentication method #}
+        <div class="row justify-content-center">
+            <div class="col-6">
+                {% if availableTwoFactorProviders|length > 1 %}
+                    <p>Choisissez une méthode d'authentification :
+                        {% for provider in availableTwoFactorProviders %}
+                            <a href="{{ path("2fa_login", {"preferProvider": provider}) }}">{{ provider }}</a>
+                        {% endfor %}
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+
+        {# Display current two-factor provider #}
+        <div class="row justify-content-center">
+            <div class="col-6">
+
+                <form class="form" action="{{ checkPathUrl ? checkPathUrl: path(checkPathRoute) }}" method="post">
+                    <div class="form-floating mb-3 mt-3">
+                        <input
+                            id="_auth_code"
+                            type="text"
+                            name="{{ authCodeParameterName }}"
+                            autocomplete="one-time-code"
+                            autofocus
+                            inputmode="numeric"
+                            pattern="[0-9]*"
+                            class="form-control"
+                            placeholder="0000"
+                        />
+                        <label class="form-label" for="{{ authCodeParameterName }}">Code d'authentification</label>
+                    </div>
+
+                    {% if displayTrustedOption %}
+                        <p class="widget"><label for="_trusted"><input id="_trusted" type="checkbox" name="{{ trustedParameterName }}" /> Se souvenir de cet appareil</label></p>
+                    {% endif %}
+                    {% if isCsrfProtectionEnabled %}
+                        <input type="hidden" name="{{ csrfParameterName }}" value="{{ csrf_token(csrfTokenId) }}">
+                    {% endif %}
+                    <div class="row">
+                        <div class="submit col-4"><input type="submit" class="btn btn-mysecu" value="Se connecter" /></div>
+                        {# The logout link gives the user a way out if they can't complete two-factor authentication #}
+                        <div class="cancel col-4"><a class="btn btn-info" href="{{ logoutPath }}">Annuler</a></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
