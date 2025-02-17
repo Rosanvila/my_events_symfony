@@ -5,5 +5,6 @@ scheb_two_factor:
         - Symfony\Component\Security\Http\Authenticator\Token\PostAuthenticationToken
     email:
         enabled: true
-        digits: 6
-        
+        #sender_email: '%env(SENDER_EMAIL)%'
+        # sender_name: John Doe  # Optional
+        # template: security/2fa_form.html.twig

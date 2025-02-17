@@ -1,12 +1,10 @@
 {% extends 'security/email/base.html.twig' %}
 
-{% block title %}Code de vérification{% endblock %}
-{% block preheader %}Votre code de vérification{% endblock %}
+{% block title %}{{ subject|trans() }}{% endblock %}
+{% block preheader %}{{ subject|trans() }}{% endblock %}
 
 {% block body %}
-     Bonjour,
-
-     Voici votre code de vérification :
+     {{ "mailer.authentication_code.body.start"|trans()|nl2br }}
      <p style="font-weight: bold;">{{ authCode }}</p>
-     Ce code est valide jusqu'à {{ expiresAt }}.
+     {{ "mailer.authentication_code.body.end"|trans({'%authCode%': authCode, '%expiresAt%': expiresAt})|nl2br|raw }}
 {% endblock %}

@@ -10,13 +10,13 @@
                     {% if authenticationErrorData|length == 0 %}
                         <div class="row justify-content-center mt-3">
                             <div class="alert alert-info justify-content-center d-flex" role="alert">
-                                Une erreur d'authentification est survenue.
+                                {{ authenticationError|trans(authenticationErrorData, 'SchebTwoFactorBundle') }}
                             </div>
                         </div>
                     {% else %}
                         <div class="row justify-content-center mt-3">
                             <div class="alert alert-info justify-content-center d-flex" role="alert">
-                                {{ authenticationError }}
+                                {{ authenticationError|trans(authenticationErrorData, 'security') }}
                             </div>
                         </div>
                     {% endif %}
@@ -28,7 +28,7 @@
         <div class="row justify-content-center">
             <div class="col-6">
                 {% if availableTwoFactorProviders|length > 1 %}
-                    <p>Choisissez une méthode d'authentification :
+                    <p>{{ "choose_provider"|trans({}, 'SchebTwoFactorBundle') }}:
                         {% for provider in availableTwoFactorProviders %}
                             <a href="{{ path("2fa_login", {"preferProvider": provider}) }}">{{ provider }}</a>
                         {% endfor %}
@@ -54,19 +54,19 @@
                             class="form-control"
                             placeholder="0000"
                         />
-                        <label class="form-label" for="{{ authCodeParameterName }}">Code d'authentification</label>
+                        <label class="form-label" for="{{ authCodeParameterName }}">{{ "auth_code"|trans({}, 'SchebTwoFactorBundle') }}</label>
                     </div>
 
                     {% if displayTrustedOption %}
-                        <p class="widget"><label for="_trusted"><input id="_trusted" type="checkbox" name="{{ trustedParameterName }}" /> Se souvenir de cet appareil</label></p>
+                        <p class="widget"><label for="_trusted"><input id="_trusted" type="checkbox" name="{{ trustedParameterName }}" /> {{ "trusted"|trans({}, 'SchebTwoFactorBundle') }}</label></p>
                     {% endif %}
                     {% if isCsrfProtectionEnabled %}
                         <input type="hidden" name="{{ csrfParameterName }}" value="{{ csrf_token(csrfTokenId) }}">
                     {% endif %}
                     <div class="row">
-                        <div class="submit col-4"><input type="submit" class="btn btn-mysecu" value="Se connecter" /></div>
+                        <div class="submit col-4"><input type="submit" class="btn btn-mysecu" value="{{ "login"|trans({}, 'SchebTwoFactorBundle') }}" /></div>
                         {# The logout link gives the user a way out if they can't complete two-factor authentication #}
-                        <div class="cancel col-4"><a class="btn btn-info" href="{{ logoutPath }}">Annuler</a></div>
+                        <div class="cancel col-4"><a class="btn btn-info" href="{{ logoutPath }}">{{ "cancel"|trans({}, 'SchebTwoFactorBundle') }}</a></div>
                     </div>
                 </form>
             </div>
