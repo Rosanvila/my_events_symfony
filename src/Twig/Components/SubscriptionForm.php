@@ -83,9 +83,6 @@ class SubscriptionForm extends AbstractController
 
             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $this->user, $templatedEmail);
 
-            // Envoyer l'email avec le code d'authentification
-            $authCodeEmail = $this->authCodeEmailGenerator->createAuthCodeEmail($this->user);
-            $this->mailer->send($authCodeEmail);
             
         } catch (\Exception $e) {
             $this->addFlash('error', 'Une erreur est survenue lors de l\'enregistrement de l\'utilisateur.');
