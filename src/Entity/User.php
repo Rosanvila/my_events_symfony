@@ -69,6 +69,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Participation::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $participations;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $google_id = null;
+
     public function __construct()
     {
         $this->events = new ArrayCollection();
@@ -250,5 +253,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     public function getUserIdentifier(): string
     {
         return (string) $this->email;
+    }
+
+    public function getGoogleId(): ?string
+    {
+        return $this->google_id;
+    }
+
+    public function setGoogleId(?string $google_id): static
+    {
+        $this->google_id = $google_id;
+
+        return $this;
     }
 }
