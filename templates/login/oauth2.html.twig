@@ -8,7 +8,7 @@
 			<a href="#"><img src="{{ asset('img/apple.svg') }}" alt="apple" class="img-fluid"></a>
 		</li>
 		<li class="list-inline-item mx-3">
-			<a href="#"><img src="{{ asset('img/facebook.svg') }}" alt="facebook" class="img-fluid"></a>
+            <a href="{{ path('auth_oauth_connect', {service: 'facebook'}) }}"><img src="{{ asset('img/facebook.svg') }}" alt="facebook" class="img-fluid"></a>
 		</li>
 	</ul>
 </div>

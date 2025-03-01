@@ -14,6 +14,7 @@ final class SecurityController extends AbstractController
 {
     public const SCOPES = [
         'google' => [],
+        'facebook' => [],
     ];
 
     #[Route('/oauth/connect/{service}', name: 'auth_oauth_connect', methods: ['GET'])]
