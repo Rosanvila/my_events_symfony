@@ -5,7 +5,8 @@ namespace App\Security;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
-use League\OAuth2\Client\GoogleUser;
+use League\OAuth2\Client\Provider\GoogleUser;
+use League\OAuth2\Client\Provider\FacebookUser;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 final readonly class OauthRegistrationService
@@ -16,17 +17,24 @@ final readonly class OauthRegistrationService
     ) {}
 
     /**
-     * @param GoogleUser $resourceOwner
+     * @param GoogleUser|FacebookUser $resourceOwner
      */
     public function persist(ResourceOwnerInterface $resourceOwner): User
     {
         $user = new User();
         $user->setEmail($resourceOwner->getEmail());
-        $user->setGoogleId($resourceOwner->getId());
         $user->setFirstname($resourceOwner->getFirstName());
         $user->setLastname($resourceOwner->getLastName());
         $user->setRoles(['ROLE_USER']);
         $user->setPassword($this->passwordHasher->hashPassword($user, uniqid()));
+
+        if ($resourceOwner instanceof GoogleUser) {
+            $user->setGoogleId($resourceOwner->getId());
+        }
+
+        if ($resourceOwner instanceof FacebookUser) {
+            $user->setFacebookId($resourceOwner->getId());
+        }
 
         $this->userRepository->add($user, true);
 

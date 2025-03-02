@@ -72,6 +72,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $google_id = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $facebook_id = null;
+
     public function __construct()
     {
         $this->events = new ArrayCollection();
@@ -263,6 +266,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     public function setGoogleId(?string $google_id): static
     {
         $this->google_id = $google_id;
+
+        return $this;
+    }
+
+    public function getFacebookId(): ?string
+    {
+        return $this->facebook_id;
+    }
+
+    public function setFacebookId(?string $facebook_id): static
+    {
+        $this->facebook_id = $facebook_id;
 
         return $this;
     }
