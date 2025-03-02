@@ -22,9 +22,6 @@ class FacebookAuthenticator extends AbstractOAuthAuthenticator
             throw new \RuntimeException("expecting facebook user");
         }
 
-        if (true !== ($resourceOwner->toArray()['email_verified'] ?? null)) {
-            throw new AuthenticationException("email not verified");
-        }
 
         return $repository->findOneBy([
             'facebook_id' => $resourceOwner->getId(),
