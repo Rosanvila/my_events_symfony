@@ -3,6 +3,26 @@
 {% block title %}SkillShare - Home
 {% endblock %}
 
-
 {% block body %}
+	<main>
+		<section>
+			<div class="container py-4">
+				<div class="row">
+					<div class="col-md-6">
+						<h1 class="my-5">Participez, apprenez, créez</h1>
+						<h2 class="mb-3">Trouvez l'évènement qui vous convient !</h2>
+						<p>Explorez des ateliers et conférences pour développer vos compétences dans des domaines variés. Apprenez, partagez et connectez-vous avec d'autres passionnés.</p>
+						<a class="btn btn-action rounded-pill mt-4">Découvrir</a>
+					</div>
+					<div class="col-md-3 d-flex flex-column justify-content-between">
+						<img src="{{ asset('img/home/plante.png') }}" class="img-fluid mb-3" alt="Image 1">
+						<img src="{{ asset('img/home/peinture.png') }}" class="img-fluid" alt="Image 2">
+					</div>
+					<div class="col-md-3 d-flex align-items-center">
+						<img src="{{ asset('img/home/classe.png') }}" class="img-fluid mx-auto" alt="Image 3">
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
 {% endblock %}
