@@ -8,3 +8,5 @@ scheb_two_factor:
         #sender_email: '%env(SENDER_EMAIL)%'
         # sender_name: John Doe  # Optional
         # template: security/2fa_form.html.twig
+
+    two_factor_condition: 'App\Security\TwoFactorConditionService'

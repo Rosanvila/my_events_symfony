@@ -61,6 +61,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     private ?string $lastname = null;
 
     #[ORM\Column(type: 'boolean')]
+    private bool $isOAuth = false;
+
+    #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
 
     #[ORM\OneToMany(mappedBy: 'organizer', targetEntity: Event::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
@@ -279,6 +282,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     {
         $this->facebook_id = $facebook_id;
 
+        return $this;
+    }
+
+    public function isOAuth(): bool
+    {
+        return $this->isOAuth;
+    }
+
+    public function setIsOAuth(bool $isOAuth): self
+    {
+        $this->isOAuth = $isOAuth;
         return $this;
     }
 }

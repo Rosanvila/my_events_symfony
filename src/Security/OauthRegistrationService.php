@@ -27,6 +27,7 @@ final readonly class OauthRegistrationService
         $user->setLastname($resourceOwner->getLastName());
         $user->setRoles(['ROLE_USER']);
         $user->setPassword($this->passwordHasher->hashPassword($user, uniqid()));
+        $user->setIsOAuth(true); 
 
         if ($resourceOwner instanceof GoogleUser) {
             $user->setGoogleId($resourceOwner->getId());
