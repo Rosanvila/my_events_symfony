@@ -6,7 +6,7 @@
 {% block body %}
 	<main>
 		<section>
-			<div class="container py-4">
+			<div class="container my-5">
 				<div class="row">
 					<div class="col-md-6">
 						<h1 class="my-5">Participez, apprenez, créez</h1>
@@ -14,15 +14,58 @@
 						<p>Explorez des ateliers et conférences pour développer vos compétences dans des domaines variés. Apprenez, partagez et connectez-vous avec d'autres passionnés.</p>
 						<a class="btn btn-action rounded-pill mt-4">Découvrir</a>
 					</div>
-					<div class="col-md-3 d-flex flex-column justify-content-between">
+					<div class="col-md-3 d-flex flex-column justify-content-between position-relative">
+						<img src="{{ asset('img/Layer_star.svg')}}" alt="star" class="position-absolute" style="top: -1.9rem; right: -4rem;">
 						<img src="{{ asset('img/home/plante.png') }}" class="img-fluid mb-3" alt="Image 1">
 						<img src="{{ asset('img/home/peinture.png') }}" class="img-fluid" alt="Image 2">
 					</div>
-					<div class="col-md-3 d-flex align-items-center">
-						<img src="{{ asset('img/home/classe.png') }}" class="img-fluid mx-auto" alt="Image 3">
+					<div class="col-md-3 d-flex align-items-center position-relative">
+						<img src="{{ asset('img/Layer_orange.svg')}}" alt="layer orange" class="position-absolute" style="top: 27rem ; right: -1.9rem;">
+						<img src="{{ asset('img/home/classe.png') }}" class="img-fluid" alt="Image 3">
 					</div>
 				</div>
 			</div>
+		</section>
+
+		<section class="bg-secondary py-5 position-relative">
+			<div class="container text-center">
+				<h2 class="fw-bold">Organisez ou prenez part à un évènement</h2>
+				<p class="lead">
+					Ce site vous permet de créer et de participer à des événements tels que des ateliers et des conférences sur des sujets variés, comme le jardinage, la cuisine ou l'art. Que vous souhaitiez partager vos connaissances ou apprendre de nouvelles compétences, vous pouvez facilement organiser ou rejoindre des événements qui vous intéressent. Explorez, échangez et développez vos passions.
+				</p>
+				<button class="btn btn-action rounded-pill btn-lg">Je me lance !</button>
+			</div>
+			<div class="container-fluid mt-5">
+				<ul class="row justify-content-center list-unstyled">
+					<li class="col-md-3 text-center">
+						<img src="{{ asset ('img/home/plant_photo.png')}}" class="img-fluid" alt="plante 2">
+						<p>Blablabla
+							<br>
+							blouloulou</p>
+					</li>
+					<li class="col-md-3 text-center">
+						<img src="{{ asset ('img/home/pot.png')}}" class="img-fluid" alt="Image 2">
+						<p>Blablabla
+							<br>
+							blouloulou</p>
+					</li>
+					<li class="col-md-3 text-center">
+						<img src="{{ asset ('img/home/speaking.png')}}" class="img-fluid" alt="Image 3">
+						<p>Blablabla
+							<br>
+							blouloulou</p>
+					</li>
+					<li class="col-md-3 text-center">
+						<img src="{{ asset ('img/home/peinture_carre.png')}}" class="img-fluid" alt="Image 4">
+						<p>Blablabla
+							<br>
+							blouloulou</p>
+					</li>
+					<a href="#" class="text-reset text-center fs-4">Voir tous les évènements</a>
+				</ul>
+			</div>
+			<img src="{{asset ('img/Layer_violet_star.svg')}}" alt="" style="position: absolute; top: 7rem; left: 0;">
+			<img src="{{asset ('img/Vector_beige.svg')}}" alt="" style="position: absolute; bottom: -5.5rem; right: 0;">
 		</section>
 	</main>
 {% endblock %}

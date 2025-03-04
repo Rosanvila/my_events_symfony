@@ -10,12 +10,15 @@
   --footer-background: #261133;
   --connexion-btn: #671dd1;
   --bg-orange: #fe4f36;
+  --texte: #261133;
 
   /* Couleurs Bootstrap personnalisées */
-  --body-bg: var(--background);
-  --primary: var(--bg-orange);
-  --secondary: var(--background-violet);
-  --btn-primary: var(--connexion-btn);
+  --bs-body-bg: var(--background);
+  --bs-primary: var(--bg-orange);
+  --bs-secondary: var(--background-violet);
+  --bs-secondary-rgb: 220, 221, 254;
+  --bs-btn-primary-bg: var(--connexion-btn);
+  --bs-body-color: var(--texte) !important;
 }
 
 /* Bouton connexion */
