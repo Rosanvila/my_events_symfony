@@ -11,6 +11,8 @@
   --connexion-btn: #671dd1;
   --bg-orange: #fe4f36;
   --texte: #261133;
+  --beige: #F9C189;
+
 
   /* Couleurs Bootstrap personnalisées */
   --bs-body-bg: var(--background);
@@ -54,4 +56,12 @@
 .toggle-password-button {
   margin-top: 40px;
   padding-right: 10px;
+}
+
+.bg-beige {
+  background-color: var(--beige);
+}
+
+.bg-footer {
+  background-color: var(--footer-background);
 }
