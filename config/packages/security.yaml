@@ -48,6 +48,7 @@ security:
         - { path: ^/logout, role: PUBLIC_ACCESS }
         # This ensures that the form can only be accessed when two-factor authentication is in progress.
         - { path: ^/2fa, role: IS_AUTHENTICATED_2FA_IN_PROGRESS }
+        - { path: ^/event, role: ROLE_USER }
 
 when@test:
     security:

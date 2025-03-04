@@ -21,6 +21,8 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
+use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
+use Scheb\TwoFactorBundle\Security\Http\Authenticator\TwoFactorAuthenticator;
 
 abstract class AbstractOAuthAuthenticator extends OAuth2Authenticator
 {
@@ -76,6 +78,15 @@ abstract class AbstractOAuthAuthenticator extends OAuth2Authenticator
                 new RememberMeBadge()
             ]
         );
+    }
+    public function createToken(Passport $passport, string $firewallName): TokenInterface
+    {
+        $token = parent::createToken($passport, $firewallName);
+
+        // Set this to bypass 2fa for this authenticator
+        $token->setAttribute(TwoFactorAuthenticator::FLAG_2FA_COMPLETE, true);
+
+        return $token;
     }
 
     protected function getResourceOwnerFromCredentials(AccessToken $credentials): ResourceOwnerInterface
