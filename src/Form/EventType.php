@@ -16,6 +16,7 @@ class EventType extends AbstractType
     {
         $builder
             ->add('name')
+            ->add('location')
             ->add('createdAt', null, [
                 'widget' => 'single_text',
             ])
@@ -26,13 +27,9 @@ class EventType extends AbstractType
             ->add('endDate', null, [
                 'widget' => 'single_text',
             ])
-            ->add('organizer', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'id',
-            ])
             ->add('category', EntityType::class, [
                 'class' => Category::class,
-                'choice_label' => 'id',
+                'choice_label' => 'name',
             ])
         ;
     }

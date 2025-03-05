@@ -55,6 +55,10 @@ class Event
     #[Assert\GreaterThan(propertyPath: 'startDate')]
     private ?\DateTimeInterface $endDate = null;
 
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    private ?string $location = null;
+
     public function __construct()
     {
         $this->participants = new ArrayCollection();
@@ -175,6 +179,18 @@ class Event
     public function setEndDate(?\DateTimeInterface $endDate): static
     {
         $this->endDate = $endDate;
+
+        return $this;
+    }
+
+    public function getLocation(): ?string
+    {
+        return $this->location;
+    }
+
+    public function setLocation(string $location): static
+    {
+        $this->location = $location;
 
         return $this;
     }
