@@ -1,0 +1,24 @@
+<div {{ attributes }}>
+  {{
+    form_start(form, {
+      attr: {
+        "data-action": "live#action:prevent",
+        "data-action-name": "save"
+      }
+    })
+  }}
+  {{ form_row(form.name) }}
+  {{ form_row(form.description) }}
+  {{ form_row(form.photo) }}
+  {{ form_row(form.location) }}
+  {{ form_row(form.maxParticipants) }}
+  {{ form_row(form.startDate) }}
+  {{ form_row(form.endDate) }}
+  {{ form_row(form.isPaid) }}
+  {% if this.isPaid is defined and this.isPaid == true %}
+  {{ form_row(form.price) }}
+  {% endif %}
+  {{ form_row(form.category) }}
+  {{ form_end(form) }}
+  <button type="submit" class="btn btn-primary">Créer l'événement</button>
+</div>

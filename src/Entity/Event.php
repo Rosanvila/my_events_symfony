@@ -13,8 +13,11 @@ use App\Entity\Participation;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Event
 {
+    private const DEFAULT_PHOTO = '/images/default-event.png';
+    private const MAX_FILE_SIZE = 2097152; // 2MB 
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -23,6 +26,20 @@ class Event
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     private ?string $name = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $photo = null;
+
+    #[ORM\Column]
+    #[Assert\NotNull]
+    #[Assert\GreaterThan(0)]
+    private ?int $maxParticipants = null;
+
+    #[ORM\Column]
+    private bool $isPaid = false;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Assert\NotBlank]
@@ -42,7 +59,7 @@ class Event
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
     #[Assert\Positive]
-    private ?float $price = null;
+    private ?string $price = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Assert\NotBlank]
@@ -147,12 +164,12 @@ class Event
         return $this;
     }
 
-    public function getPrice(): ?float
+    public function getPrice(): ?string
     {
         return $this->price;
     }
 
-    public function setPrice(?float $price): static
+    public function setPrice(?string $price): static
     {
         $this->price = $price;
 
@@ -193,5 +210,55 @@ class Event
         $this->location = $location;
 
         return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+    public function getPhoto(): ?string
+    {
+        return $this->photo ?? self::DEFAULT_PHOTO;
+    }
+
+    public function setPhoto(?string $photo): static
+    {
+        $this->photo = $photo;
+        return $this;
+    }
+
+    public function getMaxParticipants(): ?int
+    {
+        return $this->maxParticipants;
+    }
+
+    public function setMaxParticipants(int $maxParticipants): static
+    {
+        $this->maxParticipants = $maxParticipants;
+        return $this;
+    }
+
+    public function isIsPaid(): bool
+    {
+        return $this->isPaid;
+    }
+
+    public function setIsPaid(bool $isPaid): static
+    {
+        $this->isPaid = $isPaid;
+        return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function setCreatedAtValue(): void
+    {
+        $this->createdAt = new \DateTime();
     }
 }
