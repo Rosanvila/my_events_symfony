@@ -23,20 +23,21 @@ use Symfony\UX\LiveComponent\ComponentWithFormTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
 #[AsLiveComponent('event_form')]
-final class PaidEvent extends AbstractController
+final class CreateEvent extends AbstractController
 {
     use ComponentWithFormTrait;
     use DefaultActionTrait;
 
-    #[LiveProp(fieldName: 'formData')]
-    public ?Event $event = null;
+    private Event $event;
 
     #[LiveProp]
     public ?Event $initialFormData = null;
 
     public function __construct(
         private EntityManagerInterface $entityManager
-    ) {}
+    ) {
+        $this->event = new Event();
+    }
 
     protected function instantiateForm(): FormInterface
     {
@@ -47,18 +48,14 @@ final class PaidEvent extends AbstractController
     public function save()
     {
         $this->submitForm();
-        $form = $this->getForm();
-
-        $event = $form->getData();
-        $event->setCreatedAt(new \DateTime());
-
-        if ($form->isValid()) {
-            $event = $form->getData();
+        $this->event = $this->getForm()->getData();
 
 
-            $this->entityManager->persist($event);
-            $this->entityManager->flush();
-        }
+        $this->event->setOrganizer($this->getUser());
+
+        $this->entityManager->persist($this->event);
+        $this->entityManager->flush();
+
         return $this->redirectToRoute('app_event_index');
     }
 }

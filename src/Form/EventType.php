@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -19,7 +20,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
 use Symfonycasts\DynamicForms\DynamicFormBuilder;
 use Symfonycasts\DynamicForms\DependentField;
-
 
 class EventType extends AbstractType
 {
@@ -30,14 +30,16 @@ class EventType extends AbstractType
             ->add('name', TextType::class, [
                 'label' => 'Nom de l\'événement',
                 'attr' => [
-                    'placeholder' => 'Entrez le nom de l\'événement'
+                    'class' => 'form-control rounded-pill',
+                    'placeholder' => 'Nom de l\'événement'
                 ]
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'Description',
                 'required' => false,
                 'attr' => [
-                    'placeholder' => 'Décrivez votre événement',
+                    'class' => 'form-control rounded',
+                    'placeholder' => 'Description',
                     'rows' => 5
                 ]
             ])
@@ -59,31 +61,41 @@ class EventType extends AbstractType
             ->add('location', TextType::class, [
                 'label' => 'Lieu',
                 'attr' => [
-                    'placeholder' => 'Où se déroulera l\'événement ?'
+                    'class' => 'form-control rounded-pill',
+                    'placeholder' => 'Lieu'
                 ]
             ])
             ->add('maxParticipants', IntegerType::class, [
                 'label' => 'Nombre maximum de participants',
                 'attr' => [
+                    'class' => 'form-control rounded-pill',
                     'min' => 1,
-                    'placeholder' => 'Nombre de participants maximum'
+                    'placeholder' => 'Nombre maximum de participants'
                 ]
             ])
             ->add('startDate', DateTimeType::class, [
                 'label' => 'Date de début',
                 'widget' => 'single_text',
+                'input' => 'datetime',
                 'html5' => true,
                 'model_timezone' => 'Europe/Paris',
                 'view_timezone' => 'Europe/Paris',
-                'by_reference' => true
+                'attr' => [
+                    'class' => 'form-control rounded-pill',
+                    'placeholder' => 'Date de début'
+                ]
             ])
             ->add('endDate', DateTimeType::class, [
                 'label' => 'Date de fin',
                 'widget' => 'single_text',
+                'input' => 'datetime',
                 'html5' => true,
                 'model_timezone' => 'Europe/Paris',
                 'view_timezone' => 'Europe/Paris',
-                'by_reference' => true
+                'attr' => [
+                    'class' => 'form-control rounded-pill',
+                    'placeholder' => 'Date de fin'
+                ]
             ])
             ->add('isPaid', ChoiceType::class, [
                 'label' => 'Type d\'événement',
@@ -91,13 +103,24 @@ class EventType extends AbstractType
                     'Gratuit' => false,
                     'Payant' => true
                 ],
-                
+                'attr' => [
+                    'class' => 'form-select rounded-pill'
+                ]
             ])
             ->add('category', EntityType::class, [
                 'class' => Category::class,
                 'choice_label' => 'description',
                 'label' => 'Catégorie',
-                'placeholder' => 'Choisissez une catégorie'
+                'placeholder' => 'Choisissez une catégorie',
+                'attr' => [
+                    'class' => 'form-select rounded-pill'
+                ]
+            ])
+            ->add('submit', SubmitType::class, [
+                'label' => 'Créer l\'événement',
+                'attr' => [
+                    'class' => 'btn btn-primary'
+                ]
             ]);
 
         $builder->addDependent('price', 'isPaid', function (DependentField $field, ?bool $isPaid) {
@@ -107,7 +130,8 @@ class EventType extends AbstractType
                     'label' => 'Prix',
                     'currency' => 'EUR',
                     'attr' => [
-                        'placeholder' => 'Entrez le prix'
+                        'class' => 'form-control rounded-pill',
+                        'placeholder' => 'Prix'
                     ]
                 ]);
             }
@@ -118,7 +142,6 @@ class EventType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Event::class,
-            'allow_extra_fields' => true
         ]);
     }
 }

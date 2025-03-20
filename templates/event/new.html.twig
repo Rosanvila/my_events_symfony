@@ -1,11 +1,24 @@
-{% extends 'base.html.twig' %}
+{% extends 'base.html.twig' %} {% block title %}New Event{% endblock %} {% block
+body %}
 
-{% block title %}New Event{% endblock %}
+<div class="container" style="max-width: 50rem">
+  <div class="d-flex">
+    <a
+      href="{{ path('app_event_index') }}"
+      class="text-capitalize text-decoration-none py-4 link-dark"
+      >retour</a
+    >
+  </div>
+  <div class="text-center">
+    <h1>Créer un évènement</h1>
+    <p class="mx-auto">
+      Vous avez une compétence à partager ou une passion que vous voulez
+      transmettre ? Organisez votre propre atelier ou conférence et invitez
+      d'autres curieux à vous rejoindre !
+    </p>
+  </div>
+</div>
 
-{% block body %}
-    <h1>Create new Event</h1>
+{{ include("event/_form.html.twig") }}
 
-    {{ include('event/_form.html.twig') }}
-
-    <a href="{{ path('app_event_index') }}">back to list</a>
 {% endblock %}

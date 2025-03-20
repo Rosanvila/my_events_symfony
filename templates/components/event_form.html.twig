@@ -1,5 +1,5 @@
-<div {{ attributes }}>
-  {{
+<div {{ attributes }} class="container text-center" style="max-width: 60rem">
+	{{
     form_start(form, {
       attr: {
         "data-action": "live#action:prevent",
@@ -7,18 +7,68 @@
       }
     })
   }}
-  {{ form_row(form.name) }}
-  {{ form_row(form.description) }}
-  {{ form_row(form.photo) }}
-  {{ form_row(form.location) }}
-  {{ form_row(form.maxParticipants) }}
-  {{ form_row(form.startDate) }}
-  {{ form_row(form.endDate) }}
-  {{ form_row(form.isPaid) }}
-  {% if this.isPaid is defined and this.isPaid == true %}
-  {{ form_row(form.price) }}
-  {% endif %}
-  {{ form_row(form.category) }}
-  {{ form_end(form) }}
-  <button type="submit" class="btn btn-primary">Créer l'événement</button>
+	<div>
+		<h2>Informations générales</h2>
+
+		<div class="mb-3">
+			{{ form_widget(form.name) }}
+			{{ form_errors(form.name) }}
+			{{ form_help(form.name) }}
+		</div>
+
+		<div class="mb-3">
+			{{ form_widget(form.description) }}
+			{{ form_errors(form.description) }}
+			{{ form_help(form.description) }}
+		</div>
+	</div>
+
+	<div class="mb-3">
+		{{ form_widget(form.category) }}
+		{{ form_errors(form.category) }}
+		{{ form_help(form.category) }}
+	</div>
+
+	<div class="mb-3">
+		{{ form_widget(form.location) }}
+		{{ form_errors(form.location) }}
+		{{ form_help(form.location) }}
+	</div>
+
+	<div class="mb-3">
+		{{ form_widget(form.maxParticipants) }}
+		{{ form_errors(form.maxParticipants) }}
+		{{ form_help(form.maxParticipants) }}
+	</div>
+
+	<div class="mb-3">
+		{{ form_widget(form.startDate) }}
+		{{ form_errors(form.startDate) }}
+		{{ form_help(form.startDate) }}
+	</div>
+
+	<div class="mb-3">
+		{{ form_widget(form.endDate) }}
+		{{ form_errors(form.endDate) }}
+		{{ form_help(form.endDate) }}
+	</div>
+
+	<div class="mb-3">
+		{{ form_row(form.isPaid) }}
+	</div>
+
+	{% if this.isPaid is defined and this.isPaid == true %}
+		<div class="mb-3">
+			{{ (form.price) }}
+			{{ form_widget(form.price) }}
+			{{ form_errors(form.price) }}
+			{{ form_help(form.price) }}
+		</div>
+	{% endif %}
+
+	<div class="mb-3">
+		{{ form_row(form.photo) }}
+	</div>
+
+	{{ form_end(form) }}
 </div>
