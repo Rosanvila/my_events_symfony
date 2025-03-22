@@ -26,7 +26,7 @@
 			<ul class="nav">
 				{% for item in navItems|slice(2) %}
 					<li class="nav-item mx-3">
-						<a class="btn border border-dark rounded-pill nav-link py-1" {% if not is_granted('IS_AUTHENTICATED_FULLY') %} data-bs-toggle="modal" data-bs-target="#modalLogin" href="#" {% else %} href="#" {% endif %}>
+						<a class="btn border border-dark rounded-pill nav-link py-1" {% if not is_granted('IS_AUTHENTICATED_FULLY') %} data-bs-toggle="modal" data-bs-target="#modalLogin" href="#" {% else %} href="{{ path("app_event_new") }}" {% endif %}>
 							{{ item.title }}
 						</a>
 					</li>

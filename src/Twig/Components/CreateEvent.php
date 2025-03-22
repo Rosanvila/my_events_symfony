@@ -28,16 +28,11 @@ final class CreateEvent extends AbstractController
     use ComponentWithFormTrait;
     use DefaultActionTrait;
 
-    private Event $event;
+    private ?Event $event = null;
 
     #[LiveProp]
     public ?Event $initialFormData = null;
 
-    public function __construct(
-        private EntityManagerInterface $entityManager
-    ) {
-        $this->event = new Event();
-    }
 
     protected function instantiateForm(): FormInterface
     {
@@ -45,16 +40,39 @@ final class CreateEvent extends AbstractController
     }
 
     #[LiveAction]
-    public function save()
+    public function save(EntityManagerInterface $entityManager)
     {
+        $form = $this->getForm();
         $this->submitForm();
-        $this->event = $this->getForm()->getData();
 
+        if (!$form->isValid()) {
+            $this->addFlash('error', 'Le formulaire contient des erreurs.');
+            return;
+        }
 
-        $this->event->setOrganizer($this->getUser());
+        $this->event = $form->getData();
 
-        $this->entityManager->persist($this->event);
-        $this->entityManager->flush();
+        if (empty($this->event->getOrganizer())) {
+            $this->event->setOrganizer($this->getUser());
+        }
+
+        if (empty($this->event->getCreatedAt())) {
+            $this->event->setCreatedAt(new \DateTimeImmutable());
+        }
+
+        // Gestion de l'upload de la photo
+        $photoFile = $form->get('photo')->getData();
+        if ($photoFile) {
+            $newFilename = uniqid() . '.' . $photoFile->guessExtension();
+            $photoFile->move(
+                $this->getParameter('events_directory'),
+                $newFilename
+            );
+            $this->event->setPhoto('/uploads/events/' . $newFilename);
+        }
+
+        $entityManager->persist($this->event);
+        $entityManager->flush();
 
         return $this->redirectToRoute('app_event_index');
     }

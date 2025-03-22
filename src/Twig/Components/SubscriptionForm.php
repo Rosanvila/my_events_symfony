@@ -22,8 +22,8 @@ use Symfony\Component\Mailer\MailerInterface;
 #[AsLiveComponent('SubscriptionForm')]
 class SubscriptionForm extends AbstractController
 {
-    use DefaultActionTrait;
     use ComponentWithFormTrait;
+    use DefaultActionTrait;
 
 
     public function __construct(

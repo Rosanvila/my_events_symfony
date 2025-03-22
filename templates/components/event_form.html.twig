@@ -1,74 +1,75 @@
 <div {{ attributes }} class="container text-center" style="max-width: 60rem">
-	{{
+  {{
     form_start(form, {
       attr: {
         "data-action": "live#action:prevent",
-        "data-action-name": "save"
+        "data-live-action-param": "save"
       }
     })
   }}
-	<div>
-		<h2>Informations générales</h2>
+  <div>
+    <h2>Informations générales</h2>
 
-		<div class="mb-3">
-			{{ form_widget(form.name) }}
-			{{ form_errors(form.name) }}
-			{{ form_help(form.name) }}
-		</div>
+    <div class="mb-3">
+      {{ form_widget(form.name) }}
+      {{ form_errors(form.name) }}
+      {{ form_help(form.name) }}
+    </div>
 
-		<div class="mb-3">
-			{{ form_widget(form.description) }}
-			{{ form_errors(form.description) }}
-			{{ form_help(form.description) }}
-		</div>
-	</div>
+    <div class="mb-3">
+      {{ form_widget(form.description) }}
+      {{ form_errors(form.description) }}
+      {{ form_help(form.description) }}
+    </div>
+  </div>
 
-	<div class="mb-3">
-		{{ form_widget(form.category) }}
-		{{ form_errors(form.category) }}
-		{{ form_help(form.category) }}
-	</div>
+  <div class="mb-3">
+    {{ form_widget(form.category) }}
+    {{ form_errors(form.category) }}
+    {{ form_help(form.category) }}
+  </div>
 
-	<div class="mb-3">
-		{{ form_widget(form.location) }}
-		{{ form_errors(form.location) }}
-		{{ form_help(form.location) }}
-	</div>
+  <div class="mb-3">
+    {{ form_widget(form.location) }}
+    {{ form_errors(form.location) }}
+    {{ form_help(form.location) }}
+  </div>
 
-	<div class="mb-3">
-		{{ form_widget(form.maxParticipants) }}
-		{{ form_errors(form.maxParticipants) }}
-		{{ form_help(form.maxParticipants) }}
-	</div>
+  <div class="mb-3">
+    {{ form_widget(form.maxParticipants) }}
+    {{ form_errors(form.maxParticipants) }}
+    {{ form_help(form.maxParticipants) }}
+  </div>
 
-	<div class="mb-3">
-		{{ form_widget(form.startDate) }}
-		{{ form_errors(form.startDate) }}
-		{{ form_help(form.startDate) }}
-	</div>
+  <div class="mb-3">
+    {{ form_widget(form.startDate) }}
+    {{ form_errors(form.startDate) }}
+    {{ form_help(form.startDate) }}
+  </div>
 
-	<div class="mb-3">
-		{{ form_widget(form.endDate) }}
-		{{ form_errors(form.endDate) }}
-		{{ form_help(form.endDate) }}
-	</div>
+  <div class="mb-3">
+    {{ form_widget(form.endDate) }}
+    {{ form_errors(form.endDate) }}
+    {{ form_help(form.endDate) }}
+  </div>
 
-	<div class="mb-3">
-		{{ form_row(form.isPaid) }}
-	</div>
+  <div class="mb-3">
+    {{ form_row(form.isPaid) }}
+  </div>
 
-	{% if this.isPaid is defined and this.isPaid == true %}
-		<div class="mb-3">
-			{{ (form.price) }}
-			{{ form_widget(form.price) }}
-			{{ form_errors(form.price) }}
-			{{ form_help(form.price) }}
-		</div>
-	{% endif %}
+  {% if form.isPaid.vars.value %}
+  <div class="mb-3">
+    {{ form_row(form.price) }}
+  </div>
+  {% endif %}
 
-	<div class="mb-3">
-		{{ form_row(form.photo) }}
-	</div>
+  <div class="mb-3">
+    {{ form_row(form.photo) }}
+  </div>
 
-	{{ form_end(form) }}
+  <div class="mb-3">
+    {{ form_row(form.submit, { label: "Créer l'événement" }) }}
+  </div>
+
+  {{ form_end(form) }}
 </div>

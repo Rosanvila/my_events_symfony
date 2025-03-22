@@ -17,7 +17,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Event
 {
     private const DEFAULT_PHOTO = '/images/default-event.png';
-    private const MAX_FILE_SIZE = 2097152; // 2MB 
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -42,7 +41,6 @@ class Event
     private bool $isPaid = false;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Assert\NotBlank]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'events')]
@@ -251,11 +249,5 @@ class Event
     {
         $this->isPaid = $isPaid;
         return $this;
-    }
-
-    #[ORM\PrePersist]
-    public function setCreatedAtValue(): void
-    {
-        $this->createdAt = new \DateTime();
     }
 }

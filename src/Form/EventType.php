@@ -45,7 +45,6 @@ class EventType extends AbstractType
             ])
             ->add('photo', FileType::class, [
                 'label' => 'Image de l\'événement',
-                'mapped' => false,
                 'required' => false,
                 'constraints' => [
                     new File([
