@@ -33,7 +33,7 @@ final class EventController extends AbstractController
 
         return $this->render('event/new.html.twig', [
             'event' => $event,
-            'form' => $form,
+            'EventType' => $form,
         ]);
     }
 

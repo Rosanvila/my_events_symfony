@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Category;
 use App\Entity\Event;
 use App\Entity\User;
+use PHPUnit\TextUI\CliArguments\Mapper;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -20,6 +21,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
 use Symfonycasts\DynamicForms\DynamicFormBuilder;
 use Symfonycasts\DynamicForms\DependentField;
+use App\Form\DataTransformer\FileToStringTransformer;
 
 class EventType extends AbstractType
 {
@@ -46,15 +48,10 @@ class EventType extends AbstractType
             ->add('photo', FileType::class, [
                 'label' => 'Image de l\'événement',
                 'required' => false,
-                'constraints' => [
-                    new File([
-                        'maxSize' => '2M',
-                        'mimeTypes' => [
-                            'image/jpeg',
-                            'image/png',
-                        ],
-                        'mimeTypesMessage' => 'Veuillez télécharger une image valide (JPEG ou PNG)',
-                    ])
+                'mapped' => false,
+                'attr' => [
+                    'data-action' => "live#action:prevent",
+                    'data-live-action-param' => "files|updatePicturePreview",
                 ],
             ])
             ->add('location', TextType::class, [

@@ -1,75 +1,91 @@
-<div {{ attributes }} class="container text-center" style="max-width: 60rem">
-  {{
+<div {{ attributes.defaults(stimulus_controller('picture_preview')) }} class="container text-center" style="max-width: 60rem">
+	{{form_errors(form)}}
+
+	{{
     form_start(form, {
       attr: {
-        "data-action": "live#action:prevent",
-        "data-live-action-param": "save"
+        'data-action': 'live#action:prevent',
+        'data-live-action-param': 'save'
       }
     })
   }}
-  <div>
-    <h2>Informations générales</h2>
+	<div>
+		<h2>Informations générales</h2>
 
-    <div class="mb-3">
-      {{ form_widget(form.name) }}
-      {{ form_errors(form.name) }}
-      {{ form_help(form.name) }}
-    </div>
+		<div class="mb-3">
+			{{ form_widget(form.name) }}
+			{{ form_errors(form.name) }}
+			{{ form_help(form.name) }}
+		</div>
 
-    <div class="mb-3">
-      {{ form_widget(form.description) }}
-      {{ form_errors(form.description) }}
-      {{ form_help(form.description) }}
-    </div>
-  </div>
+		<div class="mb-3">
+			{{ form_widget(form.description) }}
+			{{ form_errors(form.description) }}
+			{{ form_help(form.description) }}
+		</div>
+	</div>
 
-  <div class="mb-3">
-    {{ form_widget(form.category) }}
-    {{ form_errors(form.category) }}
-    {{ form_help(form.category) }}
-  </div>
+	<div class="mb-3">
+		{{ form_widget(form.category) }}
+		{{ form_errors(form.category) }}
+		{{ form_help(form.category) }}
+	</div>
 
-  <div class="mb-3">
-    {{ form_widget(form.location) }}
-    {{ form_errors(form.location) }}
-    {{ form_help(form.location) }}
-  </div>
+	<div class="mb-3">
+		{{ form_widget(form.location) }}
+		{{ form_errors(form.location) }}
+		{{ form_help(form.location) }}
+	</div>
 
-  <div class="mb-3">
-    {{ form_widget(form.maxParticipants) }}
-    {{ form_errors(form.maxParticipants) }}
-    {{ form_help(form.maxParticipants) }}
-  </div>
+	<div class="mb-3">
+		{{ form_widget(form.maxParticipants) }}
+		{{ form_errors(form.maxParticipants) }}
+		{{ form_help(form.maxParticipants) }}
+	</div>
 
-  <div class="mb-3">
-    {{ form_widget(form.startDate) }}
-    {{ form_errors(form.startDate) }}
-    {{ form_help(form.startDate) }}
-  </div>
+	<div class="mb-3">
+		{{ form_widget(form.startDate) }}
+		{{ form_errors(form.startDate) }}
+		{{ form_help(form.startDate) }}
+	</div>
 
-  <div class="mb-3">
-    {{ form_widget(form.endDate) }}
-    {{ form_errors(form.endDate) }}
-    {{ form_help(form.endDate) }}
-  </div>
+	<div class="mb-3">
+		{{ form_widget(form.endDate) }}
+		{{ form_errors(form.endDate) }}
+		{{ form_help(form.endDate) }}
+	</div>
 
-  <div class="mb-3">
-    {{ form_row(form.isPaid) }}
-  </div>
+	<div class="mb-3">
+		{{ form_row(form.isPaid) }}
+	</div>
 
-  {% if form.isPaid.vars.value %}
-  <div class="mb-3">
-    {{ form_row(form.price) }}
-  </div>
-  {% endif %}
+	{% if form.isPaid.vars.value %}
+		<div class="mb-3">
+			{{ form_row(form.price) }}
+		</div>
+	{% endif %}
 
-  <div class="mb-3">
-    {{ form_row(form.photo) }}
-  </div>
+	<div class="mb-3">
+		<img class="form-control img-fluid" style="max-width: 30%; padding: 0; object-fit: cover; border-color: transparent;" src="" alt="" id="picturePreview">
+		{{ form_widget(form.photo, {
+            'attr': {
+                'class': 'd-none',
+                'data-action': 'change->live#action:prevent',
+                'data-live-action-param': 'files|updatePicturePreview'
+            }
+        }) }}
+		{{ form_label(form.photo, null, {'label_attr': {'style': 'height: 100%', 'class': 'input-group-text ms-1'}}) }}
+		{{ form_errors(form.photo) }}
+	</div>
+	{% if photoUploadError %}
+		<div class="gx-1 d-flex col-12 align-items-end">
+			<div class="invalid-feedback d-flex justify-content-end">{{ photoUploadError }}</div>
+		</div>
+	{% endif %}
 
-  <div class="mb-3">
-    {{ form_row(form.submit, { label: "Créer l'événement" }) }}
-  </div>
+	<div class="mb-3">
+		{{ form_row(form.submit, { label: "Créer l'événement" }) }}
+	</div>
 
-  {{ form_end(form) }}
+	{{ form_end(form) }}
 </div>
