@@ -18,7 +18,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\Image;
 use Symfonycasts\DynamicForms\DynamicFormBuilder;
 use Symfonycasts\DynamicForms\DependentField;
 use App\Form\DataTransformer\FileToStringTransformer;
@@ -52,6 +52,14 @@ class EventType extends AbstractType
                 'attr' => [
                     'data-action' => "live#action:prevent",
                     'data-live-action-param' => "files|updatePicturePreview",
+                ],
+                'constraints' => [
+                    new Image([
+                        'maxSize' => '5M',
+                        'mimeTypes' => ['image/jpeg', 'image/png'],
+                        'maxWidth' => 800,
+                        'maxHeight' => 600,
+                    ])
                 ],
             ])
             ->add('location', TextType::class, [
@@ -94,7 +102,7 @@ class EventType extends AbstractType
                 ]
             ])
             ->add('isPaid', ChoiceType::class, [
-                'label' => 'Type d\'événement',
+                'label' => '',
                 'choices' => [
                     'Gratuit' => false,
                     'Payant' => true
@@ -115,7 +123,7 @@ class EventType extends AbstractType
             ->add('submit', SubmitType::class, [
                 'label' => 'Créer l\'événement',
                 'attr' => [
-                    'class' => 'btn btn-primary'
+                    'class' => 'btn btn-action rounded-pill'
                 ]
             ]);
 
@@ -124,10 +132,10 @@ class EventType extends AbstractType
                 $field->add(MoneyType::class, [
                     'required' => true,
                     'label' => 'Prix',
-                    'currency' => 'EUR',
+                    'currency' => '',
                     'attr' => [
                         'class' => 'form-control rounded-pill',
-                        'placeholder' => 'Prix'
+                        'placeholder' => 'Prix en €'
                     ]
                 ]);
             }

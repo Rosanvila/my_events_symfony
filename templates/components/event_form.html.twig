@@ -9,8 +9,8 @@
       }
     })
   }}
-	<div>
-		<h2>Informations générales</h2>
+	<div class="py-3">
+		<h3 class="text-start text-capitalize my-4">informations générales</h3>
 
 		<div class="mb-3">
 			{{ form_widget(form.name) }}
@@ -23,68 +23,98 @@
 			{{ form_errors(form.description) }}
 			{{ form_help(form.description) }}
 		</div>
-	</div>
 
-	<div class="mb-3">
-		{{ form_widget(form.category) }}
-		{{ form_errors(form.category) }}
-		{{ form_help(form.category) }}
-	</div>
 
-	<div class="mb-3">
-		{{ form_widget(form.location) }}
-		{{ form_errors(form.location) }}
-		{{ form_help(form.location) }}
-	</div>
-
-	<div class="mb-3">
-		{{ form_widget(form.maxParticipants) }}
-		{{ form_errors(form.maxParticipants) }}
-		{{ form_help(form.maxParticipants) }}
-	</div>
-
-	<div class="mb-3">
-		{{ form_widget(form.startDate) }}
-		{{ form_errors(form.startDate) }}
-		{{ form_help(form.startDate) }}
-	</div>
-
-	<div class="mb-3">
-		{{ form_widget(form.endDate) }}
-		{{ form_errors(form.endDate) }}
-		{{ form_help(form.endDate) }}
-	</div>
-
-	<div class="mb-3">
-		{{ form_row(form.isPaid) }}
-	</div>
-
-	{% if form.isPaid.vars.value %}
 		<div class="mb-3">
-			{{ form_row(form.price) }}
+			{{ form_widget(form.category) }}
+			{{ form_errors(form.category) }}
+			{{ form_help(form.category) }}
 		</div>
-	{% endif %}
-
-	<div class="mb-3">
-		<img class="form-control img-fluid" style="max-width: 30%; padding: 0; object-fit: cover; border-color: transparent;" src="" alt="" id="picturePreview">
-		{{ form_widget(form.photo, {
-            'attr': {
-                'class': 'd-none',
-                'data-action': 'change->live#action:prevent',
-                'data-live-action-param': 'files|updatePicturePreview'
-            }
-        }) }}
-		{{ form_label(form.photo, null, {'label_attr': {'style': 'height: 100%', 'class': 'input-group-text ms-1'}}) }}
-		{{ form_errors(form.photo) }}
 	</div>
-	{% if photoUploadError %}
-		<div class="gx-1 d-flex col-12 align-items-end">
-			<div class="invalid-feedback d-flex justify-content-end">{{ photoUploadError }}</div>
-		</div>
-	{% endif %}
 
-	<div class="mb-3">
-		{{ form_row(form.submit, { label: "Créer l'événement" }) }}
+	<div class="py-3">
+		<h3 class="text-start text-capitalize my-4">details pratiques</h3>
+
+		<div class="mb-3">
+			{{ form_widget(form.location) }}
+			{{ form_errors(form.location) }}
+			{{ form_help(form.location) }}
+		</div>
+
+
+		<div class="mb-3">
+			{{ form_widget(form.startDate) }}
+			{{ form_errors(form.startDate) }}
+			{{ form_help(form.startDate) }}
+		</div>
+
+		<div class="mb-3">
+			{{ form_widget(form.endDate) }}
+			{{ form_errors(form.endDate) }}
+			{{ form_help(form.endDate) }}
+		</div>
+	</div>
+
+	<div class="py-3">
+		<h3 class="text-start text-capitalize my-4">Tarification et accessibilité</h3>
+
+		<div class="mb-3">
+			{{ form_widget(form.maxParticipants) }}
+			{{ form_errors(form.maxParticipants) }}
+			{{ form_help(form.maxParticipants) }}
+		</div>
+
+
+		<div class="mb-3">
+			{{ form_widget(form.isPaid) }}
+		</div>
+
+		{% if form.isPaid.vars.value %}
+			<div class="mb-3">
+				{{ form_widget(form.price) }}
+			</div>
+		{% endif %}
+	</div>
+
+	<div class="py-3">
+		<h3 class="text-start text-capitalize my-4">illustration</h3>
+		
+		<div class="row">
+			<div class="col-6">
+				<div class="mb-3">
+					<ul class="list-unstyled">
+						<li class="text-start">Format accepté : JPG, PNG</li>
+						<li class="text-start">Taille maximale : 5 Mo</li>
+						<li class="text-start">Résolution minimale : 800x600 pixels</li>
+						<li class="my-2 text-start">Choisissez une image nette et engageante qui représente bien votre événement.</li>
+					</ul>
+				</div>
+			</div>
+			
+			<div class="col-6">
+				<div class="mb-3">
+					<img class="form-control img-fluid" style="width: 100%; padding: 0; object-fit: cover; border-color: transparent;" src="" alt="" id="picturePreview">
+					{{ form_widget(form.photo, {
+						'attr': {
+							'class': 'd-none',
+							'data-action': 'change->live#action:prevent',
+							'data-live-action-param': 'files|updatePicturePreview'
+						}
+					}) }}
+					{{ form_label(form.photo, null, {'label_attr': {'style': 'height: 100%', 'class': 'input-group-text ms-1'}}) }}
+					{{ form_errors(form.photo) }}
+				</div>
+				{% if photoUploadError %}
+					<div class="gx-1 d-flex col-12 align-items-end">
+						<div class="invalid-feedback d-flex justify-content-end">{{ photoUploadError }}</div>
+					</div>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+
+	<div class="py-5">
+		{{ form_row(form.submit) }}
 	</div>
 
 	{{ form_end(form) }}

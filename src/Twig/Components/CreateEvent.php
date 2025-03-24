@@ -77,6 +77,8 @@ final class CreateEvent extends AbstractController
                     'image/png',
                     'image/jpeg',
                 ],
+                'maxWidth' => 800,
+                'maxHeight' => 600,
             ]),
         ]);
 
