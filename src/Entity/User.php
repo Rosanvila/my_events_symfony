@@ -35,33 +35,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: "string", length: 180, unique: true)]
-    #[Assert\NotBlank]
-    #[Assert\Email]
+    #[ORM\Column(length: 180, unique: true)]
+    #[Assert\NotBlank(message: 'Veuillez entrer une adresse email')]
+    #[Assert\Email(message: 'Veuillez entrer une adresse email valide')]
     private ?string $email = null;
+
+    #[ORM\Column]
+    private array $roles = [];
 
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\Column(type: "string", nullable: true)]
-    private ?string $authCode;
-
-    #[ORM\Column(type: 'datetime', nullable: true)]
-    private $email_auth_code_expires_at;
-
-    #[ORM\Column(type: Types::JSON)]
-    private array $roles = [];
-
-    #[ORM\Column(length: 55)]
-    #[Assert\NotBlank]
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Veuillez entrer votre prénom')]
     private ?string $firstname = null;
 
-    #[ORM\Column(length: 55)]
-    #[Assert\NotBlank]
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Veuillez entrer votre nom')]
     private ?string $lastname = null;
 
-    #[ORM\Column(type: 'boolean')]
-    private bool $isOAuth = false;
+    #[ORM\Column]
+    private ?bool $isOAuth = false;
 
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
@@ -72,16 +66,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Participation::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $participations;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $google_id = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $facebook_id = null;
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: OauthConnection::class, orphanRemoval: true)]
+    private Collection $oauthConnections;
 
     public function __construct()
     {
         $this->events = new ArrayCollection();
         $this->participations = new ArrayCollection();
+        $this->oauthConnections = new ArrayCollection();
         $this->roles = ['ROLE_USER']; // default role
     }
 
@@ -158,11 +150,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     public function setEmail(string $email): static
     {
         $this->email = $email;
-
         return $this;
     }
 
-    public function getPassword(): ?string
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+        return $this;
+    }
+
+    public function getPassword(): string
     {
         return $this->password;
     }
@@ -170,7 +180,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     public function setPassword(string $password): static
     {
         $this->password = $password;
-
         return $this;
     }
 
@@ -186,22 +195,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
         return $this;
     }
 
-    public function getRoles(): array
-    {
-        return $this->roles;
-    }
-
-    public function setRoles(array $roles): static
-    {
-        if (!in_array('ROLE_USER', $roles)) {
-            $roles[] = 'ROLE_USER';
-        }
-
-        $this->roles = $roles;
-
-        return $this;
-    }
-
     public function getFirstname(): ?string
     {
         return $this->firstname;
@@ -210,7 +203,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     public function setFirstname(string $firstname): static
     {
         $this->firstname = $firstname;
-
         return $this;
     }
 
@@ -222,77 +214,76 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     public function setLastname(string $lastname): static
     {
         $this->lastname = $lastname;
-
         return $this;
     }
 
     public function getEmailAuthCode(): string
     {
-        if (null === $this->authCode) {
+        if (null === $this->emailAuthCode) {
             throw new \LogicException('The email authentication code was not set');
         }
 
-        return $this->authCode;
+        return $this->emailAuthCode;
     }
 
-    public function setEmailAuthCode(string $authCode): void
+    public function setEmailAuthCode(string $emailAuthCode): void
     {
-        $this->authCode = $authCode;
+        $this->emailAuthCode = $emailAuthCode;
     }
 
     public function getEmailAuthCodeExpiresAt(): \DateTimeImmutable|null
     {
-        return new \DateTimeImmutable($this->email_auth_code_expires_at->format('Y-m-d H:i:s'));
+        return $this->emailAuthCodeExpiresAt ? new \DateTimeImmutable($this->emailAuthCodeExpiresAt->format('Y-m-d H:i:s')) : null;
     }
 
-    public function setEmailAuthCodeExpiresAt(\DateTimeImmutable $expiresAt): void
+    public function setEmailAuthCodeExpiresAt(\DateTimeImmutable $emailAuthCodeExpiresAt): void
     {
-        $this->email_auth_code_expires_at = $expiresAt;
+        $this->emailAuthCodeExpiresAt = $emailAuthCodeExpiresAt;
     }
 
     public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
     }
 
-    public function getUserIdentifier(): string
-    {
-        return (string) $this->email;
-    }
-
-    public function getGoogleId(): ?string
-    {
-        return $this->google_id;
-    }
-
-    public function setGoogleId(?string $google_id): static
-    {
-        $this->google_id = $google_id;
-
-        return $this;
-    }
-
-    public function getFacebookId(): ?string
-    {
-        return $this->facebook_id;
-    }
-
-    public function setFacebookId(?string $facebook_id): static
-    {
-        $this->facebook_id = $facebook_id;
-
-        return $this;
-    }
-
-    public function isOAuth(): bool
+    public function isOAuth(): ?bool
     {
         return $this->isOAuth;
     }
 
-    public function setIsOAuth(bool $isOAuth): self
+    public function setIsOAuth(bool $isOAuth): static
     {
         $this->isOAuth = $isOAuth;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, OauthConnection>
+     */
+    public function getOauthConnections(): Collection
+    {
+        return $this->oauthConnections;
+    }
+
+    public function addOauthConnection(OauthConnection $oauthConnection): static
+    {
+        if (!$this->oauthConnections->contains($oauthConnection)) {
+            $this->oauthConnections->add($oauthConnection);
+            $oauthConnection->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOauthConnection(OauthConnection $oauthConnection): static
+    {
+        if ($this->oauthConnections->removeElement($oauthConnection)) {
+            // set the owning side to null (unless already changed)
+            if ($oauthConnection->getUser() === $this) {
+                $oauthConnection->setUser(null);
+            }
+        }
+
         return $this;
     }
 }

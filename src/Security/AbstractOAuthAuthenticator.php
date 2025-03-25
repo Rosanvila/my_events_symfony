@@ -34,8 +34,7 @@ abstract class AbstractOAuthAuthenticator extends OAuth2Authenticator
         private readonly RouterInterface $router,
         private readonly UserRepository $repository,
         private readonly OauthRegistrationService $registrationService
-    ) {
-    }
+    ) {}
 
     public function supports(Request $request): ?bool
     {
@@ -73,7 +72,7 @@ abstract class AbstractOAuthAuthenticator extends OAuth2Authenticator
         }
 
         return new SelfValidatingPassport(
-            userBadge: new UserBadge($user->getUserIdentifier(), fn () => $user),
+            userBadge: new UserBadge($user->getUserIdentifier(), fn() => $user),
             badges: [
                 new RememberMeBadge()
             ]
