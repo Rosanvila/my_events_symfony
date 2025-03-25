@@ -56,7 +56,6 @@ final class OauthRegistrationService
             return $existingUser;
         }
 
-        // create a new user
         $user = new User();
         $user->setEmail($resourceOwner->getEmail());
         $user->setFirstname($resourceOwner->getFirstName());
@@ -67,7 +66,6 @@ final class OauthRegistrationService
 
         $this->userRepository->add($user, true);
 
-        // create the oauth connection
         $oauthConnection = new OauthConnection();
         $oauthConnection->setUser($user);
         $oauthConnection->setProvider($provider);

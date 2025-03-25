@@ -5,14 +5,8 @@ namespace App\Security;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Repository\OauthConnectionRepository;
-use Symfony\Component\HttpFoundation\Request;
 use League\OAuth2\Client\Provider\FacebookUser;
-use Symfony\Component\HttpFoundation\Response;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
-use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use Symfony\Component\Routing\RouterInterface;
 
