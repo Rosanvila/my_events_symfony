@@ -1,53 +1,93 @@
-{% extends 'base.html.twig' %} {% block title %}Event{% endblock %} {% block
-body %}
-<div class="container">
-  <div class="row">
-    <div class="col-md-7 py-3">
-      <h1>{{ event.name }}</h1>
-      <div class="d-flex gap-3">
-        <h6
-          class="border rounded-pill py-2 px-4"
-          style="border-color: var(--violet) !important"
-        >
-          <span
-            style="color: var(--violet)"
-            >{{ event.startDate|date('d/m/Y') }}</span
-          >
-          -
-          <span
-            style="color: var(--violet)"
-            >{{ event.endDate|date('d/m/Y') }}</span
-          >
-        </h6>
-        <h6
-          class="border rounded-pill py-2 px-4"
-          style="border-color: var(--bg-orange) !important"
-        >
-          <span style="color: var(--bg-orange)">{{ event.location }}</span>
-        </h6>
-      </div>
-
-      <div>
-        <p class="text-capitalize">
-          organisé par
-          <span style="color: var(--violet)"
-            >{{ event.organizer.firstname }}
-            {{ event.organizer.lastname }}</span
-          >
-        </p>
-      </div>
-      <div class="py-3">
-        <p>
-          {{ event.description }}
-        </p>
-      </div>
-    </div>
-
-    <a href="{{ path('app_event_index') }}">back to list</a>
-    <a href="{{ path('app_event_edit', { id: event.id }) }}">edit</a>
-    {% if app.user and app.user.id == event.organizer.id %}
-    {{ include("event/_delete_form.html.twig") }}
-    {% endif %}
-  </div>
-</div>
+{% extends 'base.html.twig' %}
+{% block title %}Event
 {% endblock %}
+{% block
+body %}
+	<section class="container">
+		<div class="row mt-5">
+			<div class="col-md-7 py-3">
+				<h1>{{ event.name }}</h1>
+				<div class="d-flex gap-3">
+					<h6 class="border rounded-pill py-2 px-4" style="border-color: var(--violet) !important">
+						<span style="color: var(--violet)">{{ event.startDate|date('d/m/Y') }}</span>
+						-
+						<span style="color: var(--violet)">{{ event.endDate|date('d/m/Y') }}</span>
+					</h6>
+					<h6 class="border rounded-pill py-2 px-4" style="border-color: var(--bg-orange) !important">
+						<span style="color: var(--bg-orange)">{{ event.location }}</span>
+					</h6>
+				</div>
+
+				<div>
+					<p class="text-capitalize">
+						organisé par
+						<span style="color: var(--violet)">{{ event.organizer.firstname }}
+							{{ event.organizer.lastname }}</span>
+					</p>
+				</div>
+				<div class="py-3">
+					<p>
+						{{ event.description }}
+					</p>
+					<button class="btn btn-outline-primary">
+						<i class="bi bi-heart"></i>
+					</button>
+				</div>
+			</div>
+			<div class="col-md-5 py-3">
+				<img src="{{ event.srcPhoto }}" alt="Photo de l'événement" class="img-fluid rounded-5"/>
+				<div class="d-flex flex-column my-3 gap-3">
+					<div class="d-flex gap-3 align-items-center">
+						<img src="{{ asset('img/event/money.png')}}" alt="money" class="img-fluid"/>
+						<p class="fw-bold">
+							{% if event.isPaid %}
+								Prix :
+								{{ event.price }}€
+							{% else %}
+								Gratuit
+							{% endif %}
+						</p>
+					</div>
+					<div class="d-flex gap-3 align-items-center">
+						<img src="{{ asset('img/event/dateIcone.svg')}}" alt="date" class="img-fluid ps-2"/>
+						<p class="fw-bold text-capitalize">
+							horaires :
+							{{ event.startDate|date('d/m/Y') }}
+							-
+							{{ event.endDate|date('d/m/Y') }}
+							<br>
+							{{ event.location }}
+						</p>
+					</div>
+					<div class="d-flex gap-3 align-items-center border rounded-pill py-2 px-4" style="border-color: var(--bg-orange) !important">
+						<div class="d-flex gap-3 align-items-center">
+							<p class="text-capitalize">
+								nombre de places :
+							</p>
+							<button>
+								<i class="bi bi-minus"></i>
+							</button>
+							<div>
+								{% if app.user and event.participants.contains(app.user) %}
+									{{ event.participants|length }}/{{ event.maxParticipants }}
+								{% else %}
+									0/{{ event.maxParticipants }}
+								{% endif %}
+							</div>
+							<button>
+								<i class="bi bi-plus"></i>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<a href="{{ path('app_event_index') }}">back to list</a>
+		<a href="{{ path('app_event_edit', { id: event.id }) }}">edit</a>
+		{% if app.user and app.user.id == event.organizer.id %}
+			{{ include("event/_delete_form.html.twig") }}
+		{% endif %}
+	</div>
+</section>
+
+<section class="container"></section>{% endblock %}
