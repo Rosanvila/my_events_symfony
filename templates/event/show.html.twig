@@ -68,16 +68,18 @@ body %}
 								<i class="bi bi-minus"></i>
 							</button>
 							<div>
-								{% if app.user and event.participants.contains(app.user) %}
+								{% if app.user %}
 									{{ event.participants|length }}/{{ event.maxParticipants }}
-								{% else %}
-									0/{{ event.maxParticipants }}
+
 								{% endif %}
 							</div>
 							<button>
 								<i class="bi bi-plus"></i>
 							</button>
 						</div>
+						<a href="{{ path('app_participation_reserve', { id: event.id }) }}" class="btn btn-action rounded-pill text-capitalize">
+							participer
+						</a>
 					</div>
 				</div>
 			</div>

@@ -17,12 +17,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFactorEmailInterface
 {
-    private ?string $emailAuthCode = null;
-    private ?\DateTimeInterface $emailAuthCodeExpiresAt = null;
-
     public function isEmailAuthEnabled(): bool
     {
-        return true; // or implement your logic to enable/disable email authentication
+        return true;
     }
 
     public function getEmailAuthRecipient(): string
@@ -56,6 +53,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
 
     #[ORM\Column]
     private ?bool $isOAuth = false;
+
+    #[ORM\Column(type: "string", nullable: true)]
+    private ?string $authCode = null;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private $email_auth_code_expires_at = null;
+
 
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
@@ -219,26 +223,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
 
     public function getEmailAuthCode(): string
     {
-        if (null === $this->emailAuthCode) {
+        if (null === $this->authCode) {
             throw new \LogicException('The email authentication code was not set');
         }
 
-        return $this->emailAuthCode;
+        return $this->authCode;
     }
 
-    public function setEmailAuthCode(string $emailAuthCode): void
+    public function setEmailAuthCode(string $authCode): void
     {
-        $this->emailAuthCode = $emailAuthCode;
+        $this->authCode = $authCode;
     }
 
     public function getEmailAuthCodeExpiresAt(): \DateTimeImmutable|null
     {
-        return $this->emailAuthCodeExpiresAt ? new \DateTimeImmutable($this->emailAuthCodeExpiresAt->format('Y-m-d H:i:s')) : null;
+        return new \DateTimeImmutable($this->email_auth_code_expires_at->format('Y-m-d H:i:s'));
     }
 
-    public function setEmailAuthCodeExpiresAt(\DateTimeImmutable $emailAuthCodeExpiresAt): void
+    public function setEmailAuthCodeExpiresAt(\DateTimeImmutable $expiresAt): void
     {
-        $this->emailAuthCodeExpiresAt = $emailAuthCodeExpiresAt;
+        $this->email_auth_code_expires_at = $expiresAt;
     }
 
     public function eraseCredentials(): void

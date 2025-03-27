@@ -34,7 +34,7 @@ class Participation
 
     public function __construct()
     {
-        $this->registeredAt = new \DateTime();
+        $this->registeredAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
