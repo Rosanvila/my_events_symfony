@@ -18,7 +18,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class ParticipationController extends AbstractController
 {
 
-    #[Route('/reserve/{id}', name: 'app_participation_reserve', methods: ['GET', 'POST'])]
+    #[Route('/reserve/{id}', name: 'app_participation_reserve', methods: ['POST'])]
     #[IsGranted('ROLE_USER')]
     public function reserve(Event $event, EntityManagerInterface $entityManager): Response
     {
@@ -28,7 +28,7 @@ class ParticipationController extends AbstractController
             ->findOneBy(['user' => $user, 'event' => $event]);
 
         if ($existingParticipation) {
-            $this->addFlash('warning', 'Vous êtes déjà inscrit à cet événement.');
+            $this->addFlash('error', 'Vous êtes déjà inscrit à cet événement.');
             return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
         }
 

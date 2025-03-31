@@ -73,6 +73,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: OauthConnection::class, orphanRemoval: true)]
     private Collection $oauthConnections;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $stripe_account_id;
+
     public function __construct()
     {
         $this->events = new ArrayCollection();
@@ -288,6 +291,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
             }
         }
 
+        return $this;
+    }
+
+    public function getStripeAccountId(): ?string
+    {
+        return $this->stripe_account_id;
+    }
+
+    public function setStripeAccountId(?string $stripe_account_id): self
+    {
+        $this->stripe_account_id = $stripe_account_id;
         return $this;
     }
 }

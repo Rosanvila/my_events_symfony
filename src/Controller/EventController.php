@@ -40,8 +40,16 @@ final class EventController extends AbstractController
     #[Route('/{id}', name: 'app_event_show', methods: ['GET'])]
     public function show(Event $event): Response
     {
+        $isParticipant = false;
+        if ($this->getUser()) {
+            $isParticipant = $event->getParticipants()->exists(function ($key, $participation) {
+                return $participation->getUser() === $this->getUser();
+            });
+        }
+
         return $this->render('event/show.html.twig', [
             'event' => $event,
+            'is_participant' => $isParticipant
         ]);
     }
 
