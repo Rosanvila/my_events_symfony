@@ -22,10 +22,13 @@ class Payment
     private ?Event $event = null;
 
     #[ORM\Column(length: 255)]
+    private ?string $stripe_session_id = null;
+
+    #[ORM\Column(length: 255)]
     private ?string $stripe_payment_intent_id = null;
 
-    #[ORM\Column]
-    private ?float $amount = null;
+    #[ORM\Column(length: 255)]
+    private ?string $amount = null;
 
     #[ORM\Column(length: 3)]
     private ?string $currency = 'eur';
@@ -68,6 +71,17 @@ class Payment
         return $this;
     }
 
+    public function getStripeSessionId(): ?string
+    {
+        return $this->stripe_session_id;
+    }
+
+    public function setStripeSessionId(string $stripe_session_id): static
+    {
+        $this->stripe_session_id = $stripe_session_id;
+        return $this;
+    }
+
     public function getStripePaymentIntentId(): ?string
     {
         return $this->stripe_payment_intent_id;
@@ -79,12 +93,12 @@ class Payment
         return $this;
     }
 
-    public function getAmount(): ?float
+    public function getAmount(): ?string
     {
         return $this->amount;
     }
 
-    public function setAmount(float $amount): static
+    public function setAmount(string $amount): static
     {
         $this->amount = $amount;
         return $this;

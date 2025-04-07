@@ -1,0 +1,44 @@
+<?php
+
+namespace App\Service\Mailer;
+
+use App\Entity\Payment;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+
+class PaymentValidationEmail
+{
+    private Address|string|null $senderAddress;
+
+    public function __construct(
+        #[Autowire(env: 'AUTH_CODE_SUBJECT')] private readonly string $subject,
+        #[Autowire(env: 'AUTH_CODE_SENDER_EMAIL')] string|null $senderEmail,
+        #[Autowire(env: 'AUTH_CODE_SENDER_NAME')] ?string $senderName = null,
+    ) {
+        if (null !== $senderEmail && null !== $senderName) {
+            $this->senderAddress = new Address($senderEmail, $senderName);
+        } elseif (null !== $senderEmail) {
+            $this->senderAddress = $senderEmail;
+        }
+    }
+    
+    public function createPaymentValidationEmail(Payment $payment): TemplatedEmail
+    {
+        $currentPaymentEmail = $payment->getUser()->getEmail();
+        $currentEventName = $payment->getEvent()->getName();
+
+        $email = new TemplatedEmail();
+        $email->subject($this->subject);
+        $email->htmlTemplate('emails/payment_validation.html.twig');
+        $email->context([
+            'user' => $currentPaymentEmail,
+            'event' => $currentEventName,
+        ]);
+
+        return $email; 
+
+        
+    }   
+
+}
