@@ -22,23 +22,26 @@ class PaymentValidationEmail
             $this->senderAddress = $senderEmail;
         }
     }
-    
+
     public function createPaymentValidationEmail(Payment $payment): TemplatedEmail
     {
-        $currentPaymentEmail = $payment->getUser()->getEmail();
+        $currentUser = $payment->getUser();
+        $currentPaymentEmail = $currentUser->getEmail();
         $currentEventName = $payment->getEvent()->getName();
 
         $email = new TemplatedEmail();
+        $email->to($currentPaymentEmail);
         $email->subject($this->subject);
         $email->htmlTemplate('emails/payment_validation.html.twig');
         $email->context([
-            'user' => $currentPaymentEmail,
+            'user' => $currentUser,
             'event' => $currentEventName,
         ]);
 
-        return $email; 
+        if (null !== $this->senderAddress) {
+            $email->from($this->senderAddress);
+        }
 
-        
-    }   
-
+        return $email;
+    }
 }

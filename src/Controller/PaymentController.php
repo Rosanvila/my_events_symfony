@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Event;
 use App\Entity\Payment;
 use App\Service\StripeService;
+use App\Service\Mailer\PaymentValidationEmail;
 use Doctrine\ORM\EntityManagerInterface;
 use Stripe\Checkout\Session;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,7 +18,8 @@ class PaymentController extends AbstractController
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private StripeService $stripeService
+        private StripeService $stripeService,
+        private PaymentValidationEmail $paymentValidationEmail
     ) {}
 
     #[Route('/checkout/{id}', name: 'app_checkout_stripe', methods: ['POST'])]
@@ -51,15 +53,21 @@ class PaymentController extends AbstractController
                 throw new \Exception('Le paiement n\'a pas été confirmé.');
             }
 
-            $this->addFlash('success', 'Votre paiement a été accepté, un email de confirmation vous sera envoyé sous peu.');
+            $payment = $this->stripeService->getPaymentBySessionId($session_id);
+            if (!$payment) {
+                throw new \Exception('Paiement non trouvé.');
+            }
+
+            // email de validation
+            $this->paymentValidationEmail->createPaymentValidationEmail($payment);
+
+            $this->addFlash('success', 'Votre paiement a été accepté, un email de confirmation vous a été envoyé.');
             return $this->redirectToRoute('app_event_index');
         } catch (\Exception $e) {
             $this->addFlash('error', $e->getMessage());
             return $this->redirectToRoute('app_event_index');
         }
     }
-
-    
 
     #[Route('/cancel', name: 'app_payment_cancel')]
     #[IsGranted('ROLE_USER')]

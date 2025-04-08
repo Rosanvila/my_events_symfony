@@ -7,7 +7,6 @@ use App\Entity\Payment;
 use App\Entity\Participation;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,7 +26,6 @@ class StripeService
         #[Autowire('%env(STRIPE_SECRET_KEY)%')] private string $stripeSecret,
         #[Autowire('%env(STRIPE_WEBHOOK_SECRET)%')] private string $webhookSecret,
         private UrlGeneratorInterface $urlGenerator,
-        private LoggerInterface $logger
     ) {
         Stripe::setApiKey($this->stripeSecret);
     }
@@ -78,98 +76,25 @@ class StripeService
                 'cancel_url' => $this->urlGenerator->generate('app_payment_cancel', [], UrlGeneratorInterface::ABSOLUTE_URL),
             ]);
 
-            $this->logger->info('Checkout session created', [
-                'session_id' => $session->id,
-                'event_id' => $event->getId(),
-                'user_id' => $user->getId()
-            ]);
-
             return $session;
         } catch (ApiErrorException $e) {
-            $this->logger->error('Stripe API error', [
-                'error' => $e->getMessage(),
-                'code' => $e->getStripeCode()
-            ]);
             throw new \Exception('Erreur lors de la création de la session de paiement : ' . $e->getMessage());
         } catch (\Exception $e) {
-            $this->logger->error('Unexpected error', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
             throw new \Exception('Une erreur inattendue est survenue : ' . $e->getMessage());
         }
     }
 
-    public function handleWebhook(Request $request): void
+
+    public function getPaymentBySessionId(string $sessionId): ?Payment
     {
-        $payload = $request->getContent();
-        $sigHeader = $request->headers->get('Stripe-Signature');
-
-        $this->logger->info('Webhook received', [
-            'signature' => $sigHeader,
-            'payload' => $payload
-        ]);
-
-        try {
-            $event = \Stripe\Webhook::constructEvent(
-                $payload,
-                $sigHeader,
-                $this->webhookSecret
-            );
-
-            $this->logger->info('Webhook event constructed', [
-                'type' => $event->type,
-                'id' => $event->id,
-                'object' => $event->data->object
-            ]);
-
-            switch ($event->type) {
-                case 'checkout.session.completed':
-                    $session = $event->data->object;
-                    $this->logger->info('Processing checkout.session.completed', [
-                        'session_id' => $session->id,
-                        'payment_status' => $session->payment_status,
-                        'metadata' => $session->metadata
-                    ]);
-                    $this->handleSuccessfulPayment($session);
-                    break;
-
-                case 'payment_intent.succeeded':
-                    $paymentIntent = $event->data->object;
-                    $this->logger->info('Payment intent succeeded', [
-                        'payment_intent_id' => $paymentIntent->id,
-                        'status' => $paymentIntent->status
-                    ]);
-                    break;
-
-                default:
-                    $this->logger->info('Unhandled event type', [
-                        'type' => $event->type
-                    ]);
-                    break;
-            }
-        } catch (SignatureVerificationException $e) {
-            $this->logger->error('Webhook signature verification failed', [
-                'error' => $e->getMessage()
-            ]);
-            throw new \Exception('Signature de webhook invalide : ' . $e->getMessage());
-        } catch (\Exception $e) {
-            $this->logger->error('Webhook error', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            throw new \Exception('Erreur lors du traitement du webhook : ' . $e->getMessage());
-        }
+        return $this->entityManager->getRepository(Payment::class)
+            ->findOneBy(['stripe_session_id' => $sessionId]);
     }
+
 
     private function handleSuccessfulPayment(Session $session): void
     {
         try {
-            $this->logger->info('Handling successful payment', [
-                'session_id' => $session->id,
-                'metadata' => $session->metadata
-            ]);
-
             if (!isset($session->metadata['event_id']) || !isset($session->metadata['user_id'])) {
                 throw new \Exception('Métadonnées manquantes dans la session');
             }
@@ -183,24 +108,17 @@ class StripeService
                 throw new \Exception('Événement ou utilisateur non trouvé');
             }
 
-            // Vérifier si le paiement existe déjà
-            $existingPayment = $this->entityManager->getRepository(Payment::class)
-                ->findOneBy(['stripe_session_id' => $session->id]);
+            $existingPayment = $this->getPaymentBySessionId($session->id);
 
             if ($existingPayment) {
-                $this->logger->info('Payment already exists', [
-                    'payment_id' => $existingPayment->getId()
-                ]);
                 return;
             }
 
-            // Création de la participation
             $participation = new Participation();
             $participation->setUser($user);
             $participation->setEvent($event);
             $participation->setStatus(self::PARTICIPATION_STATUS_CONFIRMED);
 
-            // Enregistrement du paiement
             $payment = new Payment();
             $payment->setUser($user);
             $payment->setEvent($event);
@@ -213,17 +131,41 @@ class StripeService
             $this->entityManager->persist($participation);
             $this->entityManager->persist($payment);
             $this->entityManager->flush();
-
-            $this->logger->info('Payment and participation created', [
-                'participation_id' => $participation->getId(),
-                'payment_id' => $payment->getId()
-            ]);
         } catch (\Exception $e) {
-            $this->logger->error('Error handling successful payment', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
             throw new \Exception('Erreur lors du traitement du paiement : ' . $e->getMessage());
+        }
+    }
+
+    public function handleWebhook(Request $request): void
+    {
+        $payload = $request->getContent();
+        $sigHeader = $request->headers->get('Stripe-Signature');
+
+        try {
+            $event = \Stripe\Webhook::constructEvent(
+                $payload,
+                $sigHeader,
+                $this->webhookSecret
+            );
+
+            switch ($event->type) {
+                case 'checkout.session.completed':
+                    $session = $event->data->object;
+                    $this->handleSuccessfulPayment($session);
+                    break;
+
+                case 'payment_intent.succeeded':
+                    $paymentIntent = $event->data->object;
+                    $this->handleSuccessfulPayment($paymentIntent);
+                    break;
+
+                default:
+                    throw new \Exception('Type d\'événement non géré : ' . $event->type);
+            }
+        } catch (SignatureVerificationException $e) {
+            throw new \Exception('Signature de webhook invalide : ' . $e->getMessage());
+        } catch (\Exception $e) {
+            throw new \Exception('Erreur lors du traitement du webhook : ' . $e->getMessage());
         }
     }
 }
