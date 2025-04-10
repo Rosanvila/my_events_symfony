@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Mailer\MailerInterface;
 
 #[Route('/payment')]
 class PaymentController extends AbstractController
@@ -19,7 +20,8 @@ class PaymentController extends AbstractController
     public function __construct(
         private EntityManagerInterface $entityManager,
         private StripeService $stripeService,
-        private PaymentValidationEmail $paymentValidationEmail
+        private PaymentValidationEmail $paymentValidationEmail,
+        private MailerInterface $mailer,
     ) {}
 
     #[Route('/checkout/{id}', name: 'app_checkout_stripe', methods: ['POST'])]
@@ -53,13 +55,16 @@ class PaymentController extends AbstractController
                 throw new \Exception('Le paiement n\'a pas été confirmé.');
             }
 
+            // Vérifier si le paiement existe déjà via le service StripeService
             $payment = $this->stripeService->getPaymentBySessionId($session_id);
+
             if (!$payment) {
                 throw new \Exception('Paiement non trouvé.');
             }
 
-            // email de validation
-            $this->paymentValidationEmail->createPaymentValidationEmail($payment);
+            // Créer et envoyer l'email de validation
+            $email = $this->paymentValidationEmail->createPaymentValidationEmail($payment);
+            $this->mailer->send($email);
 
             $this->addFlash('success', 'Votre paiement a été accepté, un email de confirmation vous a été envoyé.');
             return $this->redirectToRoute('app_event_index');

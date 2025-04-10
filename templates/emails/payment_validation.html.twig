@@ -7,16 +7,14 @@
       <p>Votre paiement a été validé pour l'événement {{ event.name }}.</p>
 
       <p>
-        Pour accéder à l'événement, veuillez cliquer sur le lien ci-dessous :
+        Vous trouverez votre billet d'entrée en pièce jointe de cet email.
+        N'oubliez pas de l'imprimer ou de le garder sur votre téléphone pour
+        l'événement.
       </p>
-
-      <a href="{{ url('app_event_show', { id: event.id }) }}"
-        >Accéder à l'événement</a
-      >
 
       <p>Merci pour votre confiance,</p>
 
-      <p>L'équipe de {{ app.name }}</p>
+      <p>L'équipe de MyEvents</p>
     </div>
   </div>
 </div>
