@@ -26,6 +26,9 @@ class Event
     #[Assert\NotBlank]
     private ?string $name = null;
 
+    #[ORM\Column(length: 55)]
+    private string $currentState = 'upcoming';  
+
     #[ORM\Column(nullable: true, type: Types::TEXT, length: 65535)]
     private ?string $description = null;
 
@@ -261,6 +264,17 @@ class Event
     public function setIsPaid(bool $isPaid): static
     {
         $this->isPaid = $isPaid;
+        return $this;
+    }
+
+    public function getCurrentState(): string
+    {
+        return $this->currentState;
+    }
+
+    public function setCurrentState(string $currentState): static
+    {
+        $this->currentState = $currentState;
         return $this;
     }
 }

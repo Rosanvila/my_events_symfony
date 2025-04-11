@@ -1,0 +1,29 @@
+framework:
+    workflows:
+        upcoming_event:
+            type: 'state_machine'
+            marking_store:
+                type: 'method'
+                property: 'currentState'
+            supports:
+                - App\Entity\Event
+            places:
+                - upcoming
+                - reservedByUser
+                - EventTomorrow
+                - finished
+                - cancelled
+            transitions:
+                reserve:
+                    from: upcoming
+                    to: reservedByUser
+                pay:
+                    from: reservedByUser
+                    to: EventTomorrow
+                finish:
+                    from: EventTomorrow
+                    to: finished
+                cancel:
+                    from: upcoming
+                    to: cancelled
+    

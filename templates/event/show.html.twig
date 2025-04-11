@@ -83,16 +83,33 @@ stylesheets %}
 							</div>
 						</div>
 						{% if app.user %}
-							{% if event.isPaid %}
-								<button type="button" class="btn btn-action rounded-pill text-capitalize" onclick="handlePayment()">
-									Participer
+							{% set isParticipant = false %}
+							{% for participation in event.participants %}
+								{% if participation.user.id == app.user.id %}
+									{% set isParticipant = true %}
+								{% endif %}
+							{% endfor %}
+
+							{% if not isParticipant and event.participants | length < event.maxParticipants %}
+								{% if event.isPaid %}
+									<button type="button" class="btn btn-action rounded-pill text-capitalize" onclick="handlePayment()">
+										Payer et réserver
+									</button>
+								{% else %}
+									<form action="{{ path('app_participation_reserve', { id: event.id }) }}" method="POST" class="d-inline">
+										<button type="submit" class="btn btn-action rounded-pill text-capitalize">
+											Réserver
+										</button>
+									</form>
+								{% endif %}
+							{% elseif isParticipant %}
+								<button class="btn btn-action rounded-pill text-capitalize" disabled>
+									Déjà inscrit
 								</button>
 							{% else %}
-								<form action="{{ path('app_participation_reserve', { id: event.id }) }}" method="POST" class="d-inline">
-									<button type="submit" class="btn btn-action rounded-pill text-capitalize">
-										Participer
-									</button>
-								</form>
+								<button class="btn btn-action rounded-pill text-capitalize" disabled>
+									Complet
+								</button>
 							{% endif %}
 						{% else %}
 							<a href="{{ path('app_login') }}" class="btn btn-action rounded-pill text-capitalize">

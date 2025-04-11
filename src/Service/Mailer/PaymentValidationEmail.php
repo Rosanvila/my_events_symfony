@@ -33,7 +33,6 @@ class PaymentValidationEmail
         $currentPaymentEmail = $currentUser->getEmail();
         $currentEvent = $payment->getEvent();
 
-        // Générer le PDF
         $pdfContent = $this->pdfGenerator->generateTicket($payment);
 
 
@@ -47,7 +46,7 @@ class PaymentValidationEmail
             'event' => $currentEvent,
         ]);
 
-        // Attacher le PDF
+        // PDF dans l'email
         $email->attach($pdfContent, 'billet.pdf', 'application/pdf');
 
         if (null !== $this->senderAddress) {

@@ -49,10 +49,6 @@ class StripeService
                 throw new \Exception('Cet événement est complet.');
             }
 
-            if ($event->getPrice() <= 0) {
-                throw new \Exception('Le prix de l\'événement doit être supérieur à 0.');
-            }
-
             // Création de la session
             $session = Session::create([
                 'payment_method_types' => ['card'],
