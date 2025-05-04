@@ -35,8 +35,6 @@ class PaymentValidationEmail
 
         $pdfContent = $this->pdfGenerator->generateTicket($payment);
 
-
-
         $email = new TemplatedEmail();
         $email->to($currentPaymentEmail);
         $email->subject($this->subject);
@@ -54,5 +52,10 @@ class PaymentValidationEmail
         }
 
         return $email;
+    }
+
+    public function getMailer(): MailerInterface
+    {
+        return $this->mailer;
     }
 }
