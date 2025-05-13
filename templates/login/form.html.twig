@@ -1,23 +1,24 @@
 {% block javascripts %}
 	<script src="{{ asset('js/tabs.js') }}" type="module"></script>
 {% endblock %}
-
-<div class="row justify-content-center">
-	<div class="col-10">
-		<ul class="nav nav-pills gap-3" id="pills-tab" role="tablist">
-			<li class="nav-item" role="presentation">
-				<button class="btn btn-action rounded-pill px-4 py-0 active" id="pills-sub-tab" data-bs-toggle="pill" data-bs-target="#pills-sub" type="button" role="tab" aria-controls="pills-sub" aria-selected="true">
-					S'inscrire
-				</button>
-			</li>
-			<li class="nav-item" role="presentation">
-				<button class="btn btn-action rounded-pill px-4 py-0" id="pills-connect-tab" data-bs-toggle="pill" data-bs-target="#pills-connect" type="button" role="tab" aria-controls="pills-connect" aria-selected="false">
-					Se connecter
-				</button>
-			</li>
-		</ul>
+{% if is_modal is defined and is_modal %}
+	<div class="row justify-content-center">
+		<div class="col-10">
+			<ul class="nav nav-pills gap-3" id="pills-tab" role="tablist">
+				<li class="nav-item" role="presentation">
+					<button class="btn btn-action rounded-pill px-4 py-0 active" id="pills-sub-tab" data-bs-toggle="pill" data-bs-target="#pills-sub" type="button" role="tab" aria-controls="pills-sub" aria-selected="true">
+						S'inscrire
+					</button>
+				</li>
+				<li class="nav-item" role="presentation">
+					<button class="btn btn-action rounded-pill px-4 py-0" id="pills-connect-tab" data-bs-toggle="pill" data-bs-target="#pills-connect" type="button" role="tab" aria-controls="pills-connect" aria-selected="false">
+						Se connecter
+					</button>
+				</li>
+			</ul>
+		</div>
 	</div>
-</div>
+{% endif %}
 
 <div class="tab-content" id="pills-tabContent">
 	<div class="tab-pane fade show active" id="pills-sub" role="tabpanel" aria-labelledby="pills-sub-tab">
@@ -25,48 +26,49 @@
             initialFormData: user,
         }) }}
 		{% include "login/oauth2.html.twig" %}
-
 	</div>
-	<div class="tab-pane fade" id="pills-connect" role="tabpanel" aria-labelledby="pills-connect-tab">
-		<form action="{{ path('app_login') }}" method="post" id="loginForm" name="loginForm">
-			{% if error is defined and error %}
-				<div class="row justify-content-center mt-3">
-					<div class="alert alert-info justify-content-center d-flex" role="alert">
-						{{ error.messageKey|trans(error.messageData, 'security', 'fr') }}
+	{% if is_modal is defined and is_modal %}
+		<div class="tab-pane fade" id="pills-connect" role="tabpanel" aria-labelledby="pills-connect-tab">
+			<form action="{{ path('app_login') }}" method="post" id="loginForm" name="loginForm">
+				{% if error is defined and error %}
+					<div class="row justify-content-center mt-3">
+						<div class="alert alert-info justify-content-center d-flex" role="alert">
+							{{ error.messageKey|trans(error.messageData, 'security', 'fr') }}
+						</div>
+					</div>
+				{% endif %}
+				<div class="row justify-content-center">
+					<div class="col-10">
+						<div class="mb-3 mt-3">
+							<label class="form-label fw-bold" for="email">Votre e-mail</label>
+							<input type="email" id="email" class="form-control" name="email" placeholder="name@example.com"/>
+						</div>
 					</div>
 				</div>
-			{% endif %}
-			<div class="row justify-content-center">
-				<div class="col-10">
-					<div class="mb-3 mt-3">
-						<label class="form-label fw-bold" for="email">Votre e-mail</label>
-						<input type="email" id="email" class="form-control" name="email" placeholder="name@example.com"/>
+
+				<div class="row justify-content-center">
+					<div class="col-10">
+						<div class="mb-3">
+							<label class="form-label fw-bold" for="password">Votre mot de passe</label>
+							<input type="password" id="password" name="_password" class="form-control" placeholder="password"/>
+						</div>
 					</div>
 				</div>
-			</div>
 
-			<div class="row justify-content-center">
-				<div class="col-10">
-					<div class="mb-3">
-						<label class="form-label fw-bold" for="password">Votre mot de passe</label>
-						<input type="password" id="password" name="_password" class="form-control" placeholder="password"/>
+				<input
+				type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"/>
+
+				{# If you want to control the URL the user is redirected to on success #}
+				<input type="hidden" name="_target_path" value="{{ path('2fa_login') }}"/>
+
+				<div class="row justify-content-center">
+					<div class="col-10 d-flex mb-3">
+						<button type="submit" class="flex-fill btn btn-connexion">
+							Se connecter
+						</button>
 					</div>
 				</div>
-			</div>
-
-			<input
-			type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"/>
-
-			{# If you want to control the URL the user is redirected to on success #}
-			<input type="hidden" name="_target_path" value="{{ path('2fa_login') }}"/>
-
-			<div class="row justify-content-center">
-				<div class="col-10 d-flex mb-3">
-					<button type="submit" class="flex-fill btn btn-connexion">
-						Se connecter
-					</button>
-				</div>
-			</div>
-		</form>
-	</div>
+			</form>
+		</div>
+	{% endif %}
 </div>

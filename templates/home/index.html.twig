@@ -1,116 +1,226 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}SkillShare - Home
-{% endblock %}
-
+{% extends 'base.html.twig' %} {% block title %}SkillShare - Home {% endblock %}
 {% block body %}
-	<main>
-		<section>
-			<div class="container my-5">
-				<div class="row">
-					<div class="col-md-6">
-						<h1 class="my-5">Participez, apprenez, créez</h1>
-						<h2 class="mb-3">Trouvez l'évènement qui vous convient !</h2>
-						<p>Explorez des ateliers et conférences pour développer vos compétences dans des domaines variés. Apprenez, partagez et connectez-vous avec d'autres passionnés.</p>
-						<a class="btn btn-action rounded-pill mt-4">Découvrir</a>
-					</div>
-					<div class="col-md-3 d-flex flex-column justify-content-between position-relative">
-						<img src="{{ asset('img/Layer_star.svg')}}" alt="star" class="position-absolute" style="top: -1.9rem; right: -4rem;">
-						<img src="{{ asset('img/home/plante.png') }}" class="img-fluid mb-3" alt="Image 1">
-						<img src="{{ asset('img/home/peinture.png') }}" class="img-fluid" alt="Image 2">
-					</div>
-					<div class="col-md-3 d-flex align-items-center position-relative">
-						<img src="{{ asset('img/Layer_orange.svg')}}" alt="layer orange" class="position-absolute" style="top: 27rem ; right: -1.9rem;">
-						<img src="{{ asset('img/home/classe.png') }}" class="img-fluid" alt="Image 3">
-					</div>
-				</div>
-			</div>
-		</section>
+<main>
+  <section>
+    <div class="container my-5">
+      <div class="row">
+        <div class="col-md-6">
+          <h1 class="my-5">Participez, apprenez, créez</h1>
+          <h2 class="mb-3">Trouvez l'évènement qui vous convient !</h2>
+          <p>
+            Explorez des ateliers et conférences pour développer vos compétences
+            dans des domaines variés. Apprenez, partagez et connectez-vous avec
+            d'autres passionnés.
+          </p>
+          <a
+            href="{{ path('app_discover') }}"
+            class="btn btn-action rounded-pill mt-4"
+            >Découvrir</a
+          >
+        </div>
+        <div
+          class="col-md-3 d-flex flex-column justify-content-between position-relative"
+        >
+          <img
+            src="{{ asset('img/Layer_star.svg') }}"
+            alt="star"
+            class="position-absolute"
+            style="top: -1.9rem; right: -4rem"
+          />
+          <img
+            src="{{ asset('img/home/plante.png') }}"
+            class="img-fluid mb-3"
+            alt="Image 1"
+          />
+          <img
+            src="{{ asset('img/home/peinture.png') }}"
+            class="img-fluid"
+            alt="Image 2"
+          />
+        </div>
+        <div class="col-md-3 d-flex align-items-center position-relative">
+          <img
+            src="{{ asset('img/Layer_orange.svg') }}"
+            alt="layer orange"
+            class="position-absolute"
+            style="top: 27rem; right: -1.9rem"
+          />
+          <img
+            src="{{ asset('img/home/classe.png') }}"
+            class="img-fluid"
+            alt="Image 3"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
 
-		<section class="bg-secondary py-5 position-relative">
-			<div class="container text-center">
-				<h2 class="fw-bold py-3">Organisez ou prenez part à un évènement</h2>
-				<p class="lead py-3">
-					Ce site vous permet de créer et de participer à des événements tels que des ateliers et des conférences sur des sujets variés, comme le jardinage, la cuisine ou l'art. Que vous souhaitiez partager vos connaissances ou apprendre de nouvelles compétences, vous pouvez facilement organiser ou rejoindre des événements qui vous intéressent. Explorez, échangez et développez vos passions.
-				</p>
-				<button class="btn btn-action rounded-pill btn-lg fs-3">Je me lance !</button>
-			</div>
-			<div class="container-fluid mt-5">
-				<ul class="row justify-content-center list-unstyled">
-					<li class="col-md-3 text-center">
-						<img src="{{ asset ('img/home/plant_photo.png')}}" class="img-fluid my-4" alt="plante 2">
-						<p>Blablabla
-							<br>
-							blouloulou</p>
-					</li>
-					<li class="col-md-3 text-center">
-						<img src="{{ asset ('img/home/pot.png')}}" class="img-fluid my-4" alt="Image 2">
-						<p>Blablabla
-							<br>
-							blouloulou</p>
-					</li>
-					<li class="col-md-3 text-center">
-						<img src="{{ asset ('img/home/speaking.png')}}" class="img-fluid my-4" alt="Image 3">
-						<p>Blablabla
-							<br>
-							blouloulou</p>
-					</li>
-					<li class="col-md-3 text-center">
-						<img src="{{ asset ('img/home/peinture_carre.png')}}" class="img-fluid my-4" alt="Image 4">
-						<p>Blablabla
-							<br>
-							blouloulou</p>
-					</li>
-					<a href="#" class="text-reset text-center fs-4 mt-5">Voir tous les évènements</a>
-				</ul>
-			</div>
-			<img src="{{asset ('img/Layer_violet_star.svg')}}" alt="" style="position: absolute; top: 7rem; left: 0;">
-			<img src="{{asset ('img/Vector_beige.svg')}}" alt="" style="position: absolute; bottom: -5.5rem; right: 0;">
-		</section>
+  <section class="bg-secondary py-5 position-relative">
+    <div class="container text-center">
+      <h2 class="fw-bold py-3">Organisez ou prenez part à un évènement</h2>
+      <p class="lead py-3">
+        Ce site vous permet de créer et de participer à des événements tels que
+        des ateliers et des conférences sur des sujets variés, comme le
+        jardinage, la cuisine ou l'art. Que vous souhaitiez partager vos
+        connaissances ou apprendre de nouvelles compétences, vous pouvez
+        facilement organiser ou rejoindre des événements qui vous intéressent.
+        Explorez, échangez et développez vos passions.
+      </p>
+      {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+      <a
+        href="{{ path('app_event_new') }}"
+        class="btn btn-action rounded-pill btn-lg fs-3"
+        >Je me lance !</a
+      >
+      {% else %}
+      <button
+        class="btn btn-action rounded-pill btn-lg fs-3"
+        data-bs-toggle="modal"
+        data-bs-target="#modalLogin"
+      >
+        Je me lance !
+      </button>
+      {% endif %}
+    </div>
+    <div class="container-fluid mt-5">
+      <ul class="row justify-content-center list-unstyled">
+        <li class="col-md-3 text-center">
+          <img
+            src="{{ asset('img/home/plant_photo.png') }}"
+            class="img-fluid my-4"
+            alt="plante 2"
+          />
+          <p>
+            Blablabla
+            <br />
+            blouloulou
+          </p>
+        </li>
+        <li class="col-md-3 text-center">
+          <img
+            src="{{ asset('img/home/pot.png') }}"
+            class="img-fluid my-4"
+            alt="Image 2"
+          />
+          <p>
+            Blablabla
+            <br />
+            blouloulou
+          </p>
+        </li>
+        <li class="col-md-3 text-center">
+          <img
+            src="{{ asset('img/home/speaking.png') }}"
+            class="img-fluid my-4"
+            alt="Image 3"
+          />
+          <p>
+            Blablabla
+            <br />
+            blouloulou
+          </p>
+        </li>
+        <li class="col-md-3 text-center">
+          <img
+            src="{{ asset('img/home/peinture_carre.png') }}"
+            class="img-fluid my-4"
+            alt="Image 4"
+          />
+          <p>
+            Blablabla
+            <br />
+            blouloulou
+          </p>
+        </li>
+        <a
+          href="{{ path('app_event_index') }}"
+          class="text-reset text-center fs-4 mt-5"
+          >Voir tous les évènements</a
+        >
+      </ul>
+    </div>
+    <img
+      src="{{ asset('img/Layer_violet_star.svg') }}"
+      alt=""
+      style="position: absolute; top: 7rem; left: 0"
+    />
+    <img
+      src="{{ asset('img/Vector_beige.svg') }}"
+      alt=""
+      style="position: absolute; bottom: -5.5rem; right: 0"
+    />
+  </section>
 
-		<section class="py-5">
-			<div class="container-fluid text-center">
-				<div class="row">
-					<div class="col-md-4 mt-3 px-5">
-						<img src="{{ asset ('img/home/calque.png')}}" alt="Explorer les événements" class="mb-3">
-						<h3 class="py-3">Explorez les évènements</h3>
-						<p class="px-5">
-							Parcourez les événements disponibles par catégorie, date ou niveau d'intérêt. Trouvez des ateliers ou conférences qui correspondent à vos envies et besoins.
-						</p>
-					</div>
-					<div class="col-md-4 mt-3 px-5">
-						<img src="{{ asset ('img/home/calque.png')}}" alt="Participer et organiser" class="mb-3">
-						<h3 class="py-3">Participez et organisez</h3>
-						<p class="px-5">
-							Inscrivez-vous facilement à un événement qui vous inspire.
-																																																																																								Proposez un atelier ou une conférence en partageant vos compétences avec la communauté
-						</p>
-					</div>
-					<div class="col-md-4 mt-3 px-5">
-						<img src="{{ asset ('img/home/calque.png')}}" alt="Se connecter" class="mb-3">
-						<h3 class="py-3">Se connecter</h3>
-						<p class="px-5">
-							Échangez avec les autres participants ou organisateurs, partagez vos expériences et développez votre réseau autour de vos passions.
-						</p>
-					</div>
-				</div>
-			</div>
-		</section>
+  <section class="py-5">
+    <div class="container-fluid text-center">
+      <div class="row">
+        <div class="col-md-4 mt-3 px-5">
+          <img
+            src="{{ asset('img/home/calque.png') }}"
+            alt="Explorer les événements"
+            class="mb-3"
+          />
+          <h3 class="py-3">Explorez les évènements</h3>
+          <p class="px-5">
+            Parcourez les événements disponibles par catégorie, date ou niveau
+            d'intérêt. Trouvez des ateliers ou conférences qui correspondent à
+            vos envies et besoins.
+          </p>
+        </div>
+        <div class="col-md-4 mt-3 px-5">
+          <img
+            src="{{ asset('img/home/calque.png') }}"
+            alt="Participer et organiser"
+            class="mb-3"
+          />
+          <h3 class="py-3">Participez et organisez</h3>
+          <p class="px-5">
+            Inscrivez-vous facilement à un événement qui vous inspire. Proposez
+            un atelier ou une conférence en partageant vos compétences avec la
+            communauté
+          </p>
+        </div>
+        <div class="col-md-4 mt-3 px-5">
+          <img
+            src="{{ asset('img/home/calque.png') }}"
+            alt="Se connecter"
+            class="mb-3"
+          />
+          <h3 class="py-3">Se connecter</h3>
+          <p class="px-5">
+            Échangez avec les autres participants ou organisateurs, partagez vos
+            expériences et développez votre réseau autour de vos passions.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-		<section class="bg-beige py-5">
-			<div class="container">
-				<div class="row gx-5">
-					<div class="col-md-6">
-						<h2>Rejoignez une communauté de passionnés et d'apprenants !</h2>
-						<p>
-							En vous inscrivant sur notre plateforme, vous entrez dans un espace où le partage de connaissances et l'échange d'idées sont au cœur de chaque événement. Que vous soyez ici pour apprendre ou pour transmettre votre expertise, vous aurez l'occasion de rencontrer des personnes qui partagent vos intérêts et d'élargir vos horizons. Chaque atelier, conférence ou rencontre est une chance de grandir ensemble, d'explorer de nouvelles compétences et de créer des liens durables avec d'autres passionnés.
-						</p>
-					</div>
-					<div class="col-md-6">
-						<img src="{{ asset ('img/home/big_painting.png')}}" class="img-fluid" alt="paiting lesson">
-					</div>
-				</div>
-			</div>
-		</section>
-	</main>
+  <section class="bg-beige py-5">
+    <div class="container">
+      <div class="row gx-5">
+        <div class="col-md-6">
+          <h2>Rejoignez une communauté de passionnés et d'apprenants !</h2>
+          <p>
+            En vous inscrivant sur notre plateforme, vous entrez dans un espace
+            où le partage de connaissances et l'échange d'idées sont au cœur de
+            chaque événement. Que vous soyez ici pour apprendre ou pour
+            transmettre votre expertise, vous aurez l'occasion de rencontrer des
+            personnes qui partagent vos intérêts et d'élargir vos horizons.
+            Chaque atelier, conférence ou rencontre est une chance de grandir
+            ensemble, d'explorer de nouvelles compétences et de créer des liens
+            durables avec d'autres passionnés.
+          </p>
+        </div>
+        <div class="col-md-6">
+          <img
+            src="{{ asset('img/home/big_painting.png') }}"
+            class="img-fluid"
+            alt="paiting lesson"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
 {% endblock %}

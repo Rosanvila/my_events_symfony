@@ -1,0 +1,107 @@
+{% extends 'base.html.twig' %} {% block title %}Découvrir - SkillShare{%
+endblock %} {% block body %}
+<main>
+  <section class="container my-5">
+    <h1 class="text-center mb-5">Découvrez nos événements</h1>
+
+    <div class="row mb-5">
+      <div class="col-12">
+        <h2 class="mb-4">Catégories populaires</h2>
+        <div class="d-flex flex-wrap gap-3">
+          {% for category in categories %}
+          <a
+            href="{{ path('app_event_index', { category: category.id }) }}"
+            class="btn btn-outline-primary rounded-pill"
+          >
+            {{ category.name }}
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-5">
+      <div class="col-12">
+        <h2 class="mb-4">Événements à venir</h2>
+        <div class="row">
+          {% for event in upcomingEvents %}
+          <div class="col-md-4 mb-4">
+            <div class="card h-100">
+              <img
+                src="{{ event.srcPhoto }}"
+                class="card-img-top"
+                alt="{{ event.name }}"
+              />
+              <div class="card-body">
+                <h5 class="card-title">{{ event.name }}</h5>
+                <p class="card-text">
+                  <i class="bi bi-calendar-event"></i>
+                  {{ event.startDate|date('d/m/Y H:i') }}<br />
+                  <i class="bi bi-geo-alt"></i> {{ event.location }}
+                </p>
+                <a
+                  href="{{ path('app_event_show', { id: event.id }) }}"
+                  class="btn btn-primary"
+                  >Voir les détails</a
+                >
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-5">
+      <div class="col-12 text-center">
+        <h2 class="mb-4">Pourquoi nous rejoindre ?</h2>
+        <div class="row">
+          <div class="col-md-3">
+            <i class="bi bi-people-fill fs-1 mb-3"></i>
+            <h3>Communauté active</h3>
+            <p>Rejoignez une communauté de passionnés divers et variés</p>
+          </div>
+          <div class="col-md-3">
+            <i class="bi bi-lightning-fill fs-1 mb-3"></i>
+            <h3>Apprentissage continu</h3>
+            <p>Développez vos compétences avec des experts</p>
+          </div>
+          <div class="col-md-3">
+            <i class="bi bi-heart-fill fs-1 mb-3"></i>
+            <h3>Partage de passions</h3>
+            <p>Partagez vos connaissances et découvrez de nouveaux horizons</p>
+          </div>
+          <div class="col-md-3">
+            <i class="bi bi-calendar-event-fill fs-1 mb-3"></i>
+            <h3>Sortez simplement</h3>
+            <p>
+              Créez un événement en quelques clics et invitez vos amis à venir
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 text-center">
+        <h2 class="mb-4">Prêt à commencer ?</h2>
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        <a
+          href="{{ path('app_event_new') }}"
+          class="btn btn-action btn-lg rounded-pill"
+          >Créer un événement</a
+        >
+        {% else %}
+        <button
+          class="btn btn-action btn-lg rounded-pill"
+          data-bs-toggle="modal"
+          data-bs-target="#modalLogin"
+        >
+          Rejoindre la communauté
+        </button>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+</main>
+{% endblock %}

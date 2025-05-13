@@ -41,14 +41,21 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
-        # This makes the logout route accessible during two-factor authentication. Allows the user to
-        # cancel two-factor authentication, if they need to.
-        - { path: ^/logout, role: PUBLIC_ACCESS }
-        # This ensures that the form can only be accessed when two-factor authentication is in progress.
+        # Routes publiques
+        - { path: ^/event$, roles: PUBLIC_ACCESS }
+        - { path: ^/event/\d+$, roles: PUBLIC_ACCESS }
+        - { path: ^/discover, roles: PUBLIC_ACCESS }
+        - { path: ^/details, roles: PUBLIC_ACCESS }
+        - { path: ^/logout, roles: PUBLIC_ACCESS }
+        
+        # Routes protégées
+        - { path: ^/event/new, roles: ROLE_USER }
+        - { path: ^/event/\d+/edit, roles: ROLE_USER }
+        - { path: ^/event/\d+/delete, roles: ROLE_USER }
+        - { path: ^/event/\d+/participate, roles: ROLE_USER }
+        
+        # Routes 2FA
         - { path: ^/2fa, role: IS_AUTHENTICATED_2FA_IN_PROGRESS }
-        - { path: ^/event, role: ROLE_USER }
 
 when@test:
     security:

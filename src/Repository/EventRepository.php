@@ -40,4 +40,15 @@ class EventRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findUpcomingEvents(int $limit = 6): array
+    {
+        return $this->createQueryBuilder('e')
+            ->where('e.startDate > :now')
+            ->setParameter('now', new \DateTime())
+            ->orderBy('e.startDate', 'ASC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
 }
