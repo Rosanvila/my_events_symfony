@@ -27,6 +27,7 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\UX\LiveComponent\ComponentToolsTrait;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use App\Service\ImageService;
 
 #[AsLiveComponent('event_form')]
 final class CreateEvent extends AbstractController
@@ -49,6 +50,7 @@ final class CreateEvent extends AbstractController
 
     public function __construct(
         private readonly ValidatorInterface $validator,
+        private readonly ImageService $imageService
     ) {}
 
     protected function instantiateForm(): FormInterface
@@ -108,8 +110,11 @@ final class CreateEvent extends AbstractController
 
         // photo 
         if (!is_null($this->base64Photo) && !empty($this->base64Photo)) {
-            $this->event->setPhoto($this->base64Photo);
+            $this->event->setPhoto("data:image/jpeg;base64," . $this->base64Photo);
+        } else {
+            $this->event->setPhoto($this->imageService->getImageSrc(null));
         }
+
 
         if (empty($this->event->getOrganizer())) {
             $this->event->setOrganizer($this->getUser());

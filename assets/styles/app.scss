@@ -82,3 +82,10 @@ h3 {
 .bg-footer {
   background-color: var(--footer-background);
 }
+
+.event-image {
+  height: 300px;
+  object-fit: cover;
+  object-position: center;
+}
+

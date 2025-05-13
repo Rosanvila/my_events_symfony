@@ -27,7 +27,7 @@ class Event
     private ?string $name = null;
 
     #[ORM\Column(length: 55)]
-    private string $currentState = 'upcoming';  
+    private string $currentState = 'upcoming';
 
     #[ORM\Column(nullable: true, type: Types::TEXT, length: 65535)]
     private ?string $description = null;

@@ -69,8 +69,8 @@ block body %} {# Définition des styles de catégories #} {% set categoryStyles 
       <div class="card h-100">
         <img
           src="{{ event.getSrcPhoto() }}"
-          class="card-img-top"
-          alt="Image de l'événement"
+          class="card-img-top event-image"
+          alt="{{ event.name }}"
         />
         <div class="card-body">
           <h5 class="card-title">{{ event.name }}</h5>
