@@ -33,7 +33,7 @@ class Event
     private ?string $description = null;
 
     #[ORM\Column(nullable: true, type: Types::TEXT)]
-    private ?string $photo = self::DEFAULT_PHOTO;
+    private ?string $photo = null;
 
     #[ORM\Column]
     #[Assert\NotNull]
@@ -223,25 +223,17 @@ class Event
 
     public function getPhoto(): ?string
     {
-        if (!is_null($this->photo)) {
-            return $this->photo;
-        } else {
-            return self::DEFAULT_PHOTO;
-        }
+        return $this->photo;
     }
 
     public function getSrcPhoto(): ?string
     {
-        return "data:image/jpeg;base64," . $this->getPhoto();
+        return "data:image/jpeg;base64," . $this->photo;
     }
 
     public function setPhoto(?string $photo): static
     {
-        if (!is_null($photo)) {
-            $this->photo = $photo;
-        } else {
-            $this->photo = self::DEFAULT_PHOTO;
-        }
+        $this->photo = $photo;
         return $this;
     }
 
