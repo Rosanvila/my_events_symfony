@@ -41,6 +41,34 @@ class EventRepository extends ServiceEntityRepository
     //        ;
     //    }
 
+    public function search(array $data): array
+    {
+        $qb = $this->createQueryBuilder('e')
+            ->leftJoin('e.category', 'c');
+
+        if (!empty($data['name'])) {
+            $qb->andWhere('e.name LIKE :name')
+                ->setParameter('name', '%' . $data['name'] . '%');
+        }
+
+        if (!empty($data['location'])) {
+            $qb->andWhere('e.location LIKE :location')
+                ->setParameter('location', '%' . $data['location'] . '%');
+        }
+
+        if (!empty($data['startDate'])) {
+            $qb->andWhere('e.startDate >= :startDate')
+                ->setParameter('startDate', $data['startDate']);
+        }
+
+        if (!empty($data['category'])) {
+            $qb->andWhere('c.id = :categoryId')
+                ->setParameter('categoryId', $data['category']->getId());
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
     public function findUpcomingEvents(int $limit = 6): array
     {
         return $this->createQueryBuilder('e')

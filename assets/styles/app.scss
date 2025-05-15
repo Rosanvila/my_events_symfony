@@ -11,10 +11,10 @@
   --connexion-btn: #671dd1;
   --bg-orange: #fe4f36;
   --texte: #261133;
-  --beige: #F9C189;
+  --beige: #f9c189;
   --violet: #671dd1;
   --dark-violet: #261133;
-
+  --orange: #fe4f36;
 
   /* Couleurs Bootstrap personnalisées */
   --bs-body-bg: var(--background);
@@ -36,9 +36,6 @@ h3 {
   font-weight: 700;
   color: var(--violet);
 }
-
-
-
 
 /* Bouton connexion */
 .btn-connexion {
@@ -89,3 +86,94 @@ h3 {
   object-position: center;
 }
 
+.btn-orange {
+  background-color: var(--orange);
+  border-color: var(--orange);
+  color: white;
+
+  &:hover {
+    background-color: darken(#fe4f36, 10%);
+    border-color: darken(#fe4f36, 10%);
+    color: white;
+  }
+}
+
+.btn-violet {
+  background-color: var(--violet);
+  border-color: var(--violet);
+  color: white;
+
+  &:hover {
+    background-color: darken(#671dd1, 10%);
+    border-color: darken(#671dd1, 10%);
+    color: white;
+  }
+}
+
+.btn-outline-orange {
+  color: var(--orange);
+  border-color: var(--orange);
+
+  &:hover {
+    background-color: var(--orange);
+    border-color: var(--orange);
+    color: white;
+  }
+}
+
+.btn-outline-violet {
+  color: var(--violet);
+  border-color: var(--violet);
+
+  &:hover {
+    background-color: var(--violet);
+    border-color: var(--violet);
+    color: white;
+  }
+}
+
+.btn-beige {
+  background-color: var(--beige);
+  border-color: var(--beige);
+  color: var(--dark-violet);
+
+  &:hover {
+    background-color: darken(#f9c189, 10%);
+    border-color: darken(#f9c189, 10%);
+    color: var(--dark-violet);
+  }
+}
+
+.btn-outline-beige {
+  color: var(--beige);
+  border-color: var(--beige);
+
+  &:hover {
+    background-color: var(--beige);
+    border-color: var(--beige);
+    color: var(--dark-violet);
+  }
+}
+
+.btn-dark-violet {
+  background-color: var(--dark-violet);
+  border-color: var(--dark-violet);
+  color: white;
+
+  &:hover {
+    background-color: lighten(#261133, 10%);
+    border-color: lighten(#261133, 10%);
+    color: white;
+  }
+}
+
+.btn-outline-dark-violet {
+  color: var(--dark-violet);
+  border-color: var(--dark-violet);
+
+  &:hover {
+    background-color: var(--dark-violet);
+    border-color: var(--dark-violet);
+    color: white;
+  }
+}
