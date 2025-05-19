@@ -26,6 +26,8 @@ class PasswordConfirmType extends AbstractType
                     'visible_label' => 'Show',
                     'attr' => [
                         'autocomplete' => 'new-password',
+                        'class' => 'form-control',
+                        'placeholder' => ' ',
                     ],
                 ],
                 'first_options' => [
@@ -46,7 +48,9 @@ class PasswordConfirmType extends AbstractType
                     ],
                     'label' => 'Mot de passe',
                     'attr' => [
-                        'placeholder' => 'Choisissez un mot de passe',
+                        'placeholder' => '',
+                        'class' => 'form-control',
+                        'placeholder' => ' ',
                     ],
                 ],
                 'second_options' => [
@@ -61,6 +65,8 @@ class PasswordConfirmType extends AbstractType
                     'label' => 'Confirmez le mot de passe',
                     'attr' => [
                         'placeholder' => 'Confirmez votre mot de passe',
+                        'class' => 'form-control',
+                        'placeholder' => ' ',
                     ],
                 ],
                 'invalid_message' => 'Les mots de passe ne correspondent pas.',

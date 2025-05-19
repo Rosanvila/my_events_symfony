@@ -37,6 +37,7 @@
 					{% endif %}
 					{% if is_granted('IS_AUTHENTICATED_FULLY') %}
 						<a class="btn btn-connexion rounded-pill py-1" href="{{ path('app_logout') }}">Déconnexion</a>
+						<a class="btn btn-connexion rounded-pill py-1" href="{{ path('app_user') }}">Mon profil</a>
 					{% endif %}
 				</li>
 			</ul>

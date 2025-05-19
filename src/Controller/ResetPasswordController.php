@@ -17,18 +17,30 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\ResetPassword\Controller\ResetPasswordControllerTrait;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
 use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
+
 
 #[Route('/reset-password')]
 class ResetPasswordController extends AbstractController
 {
     use ResetPasswordControllerTrait;
 
+    private Address|string|null $senderAddress;
+
+
     public function __construct(
         private ResetPasswordHelperInterface $resetPasswordHelper,
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
+        #[Autowire(env: 'AUTH_CODE_SENDER_EMAIL')] string|null $senderEmail,
+        #[Autowire(env: 'AUTH_CODE_SENDER_NAME')] ?string $senderName = null,
     ) {
+        if (null !== $senderEmail && null !== $senderName) {
+            $this->senderAddress = new Address($senderEmail, $senderName);
+        } elseif (null !== $senderEmail) {
+            $this->senderAddress = $senderEmail;
+        }
     }
 
     /**
@@ -157,14 +169,17 @@ class ResetPasswordController extends AbstractController
         }
 
         $email = (new TemplatedEmail())
-            ->from(new Address('mailer@skillshare.fr', 'no-reply'))
-            ->to((string) $user->getEmail())
+            ->to($user->getEmail())
             ->subject('Your password reset request')
             ->htmlTemplate('reset_password/email.html.twig')
             ->context([
                 'resetToken' => $resetToken,
             ])
         ;
+
+        if (null !== $this->senderAddress) {
+            $email->from($this->senderAddress);
+        }
 
         $mailer->send($email);
 
