@@ -19,13 +19,31 @@ block body %}
             <p><strong>Email :</strong> {{ user.email }}</p>
             <p><strong>Prénom :</strong> {{ user.firstname }}</p>
             <p><strong>Nom :</strong> {{ user.lastname }}</p>
+
+            {% if isOAuthUser %}
+            <div class="alert alert-info mt-3">
+              <p class="fa fa-info-circle">
+                Vous êtes actuellement connecté via
+                {{ currentOauthProvider | capitalize }}
+              </p>
+              {% if connectedProviders|length > 1 %}
+              <p class="mt-2">Vos comptes liés :</p>
+              <ul>
+                {% for provider in connectedProviders %}
+                <li>{{ provider | capitalize }}</li>
+                {% endfor %}
+              </ul>
+              {% endif %}
+            </div>
+            {% endif %}
           </div>
         </div>
       </div>
     </div>
 
-    {# Formulaire de modification du profil #}
     <div class="col-md-6">
+      {% if not isOAuthUser %} 
+      {# Formulaire de modification du profil pour les utilisateurs non-OAuth #}
       <div class="card mb-4">
         <div class="card-body">
           <h5 class="card-title">Modifier mes informations</h5>
@@ -50,7 +68,7 @@ block body %}
         </div>
       </div>
 
-      {# Formulaire de changement de mot de passe #}
+      {# Formulaire de changement de mot de passe pour utilisateurs non-OAuth #}
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">Changer mon mot de passe</h5>
@@ -76,6 +94,75 @@ block body %}
           {{ form_end(passwordForm) }}
         </div>
       </div>
+      {% else %} {# Message pour les utilisateurs OAuth #}
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">
+            Gestion du compte {{ currentOauthProvider | capitalize }}
+          </h5>
+          <p>
+            Vous êtes connecté via {{ currentOauthProvider | capitalize }}. Vos
+            informations de compte sont gérées par
+            {{ currentOauthProvider | capitalize }}.
+          </p>
+          <p>
+            Pour modifier votre email ou mot de passe, veuillez vous rendre sur
+            votre compte {{ currentOauthProvider | capitalize }}.
+          </p>
+
+          {% if currentOauthProvider == 'google' %}
+          <a
+            href="https://myaccount.google.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn-outline-primary"
+          >
+            Gérer mon compte Google
+          </a>
+          {% elseif currentOauthProvider == 'facebook' %}
+          <a
+            href="https://www.facebook.com/settings"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn-outline-primary"
+          >
+            Gérer mon compte Facebook
+          </a>
+          {% endif %} {% if connectedProviders|length > 1 %}
+          <div class="mt-4">
+            <h6>Autres comptes liés</h6>
+            <div class="list-group">
+              {% for provider in connectedProviders %} {% if provider !=
+              currentOauthProvider %}
+              <div class="list-group-item">
+                {{ provider | capitalize }}
+                {% if provider == 'google' %}
+                <a
+                  href="https://myaccount.google.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="btn btn-sm btn-outline-secondary float-end"
+                >
+                  Gérer
+                </a>
+                {% elseif provider == 'facebook' %}
+                <a
+                  href="https://www.facebook.com/settings"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="btn btn-sm btn-outline-secondary float-end"
+                >
+                  Gérer
+                </a>
+                {% endif %}
+              </div>
+              {% endif %} {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
     </div>
   </div>
 </div>

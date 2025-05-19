@@ -44,6 +44,9 @@ abstract class AbstractOAuthAuthenticator extends OAuth2Authenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
+        // Stocker le fournisseur OAuth dans la session
+        $request->getSession()->set('oauth_provider', $this->serviceName);
+
         $targetPath = $this->getTargetPath($request->getSession(), $firewallName);
         if ($targetPath) {
             return new RedirectResponse($targetPath);
