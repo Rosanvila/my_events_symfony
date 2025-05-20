@@ -1,169 +1,231 @@
-{% extends 'base.html.twig' %} {% block title %}Mon Profil{% endblock %} {%
+{% extends 'base.html.twig' %}
+{% block title %}Mon Profil
+{% endblock %}
+{%
 block body %}
-<div class="container mt-4">
-  <h1>Mon Profil</h1>
+	<div class="container mt-4">
+		<h1>Mon Profil</h1>
 
-  {% for message in app.flashes('success') %}
-  <div class="alert alert-success">
-    {{ message }}
-  </div>
-  {% endfor %}
+		{% for message in app.flashes('success') %}
+			<div class="alert alert-success">
+				{{ message }}
+			</div>
+		{% endfor %}
 
-  <div class="row">
-    {# Affichage du profil #}
-    <div class="col-md-6">
-      <div class="card mb-4">
-        <div class="card-body">
-          <h5 class="card-title">Informations personnelles</h5>
-          <div class="mb-3">
-            <p><strong>Email :</strong> {{ user.email }}</p>
-            <p><strong>Prénom :</strong> {{ user.firstname }}</p>
-            <p><strong>Nom :</strong> {{ user.lastname }}</p>
+		<div
+			class="row">
+			{# Affichage du profil #}
+			<div class="col-md-6">
+				<div class="card mb-4">
+					<div class="card-body">
+						<h5 class="card-title">Informations personnelles</h5>
+						<div class="mb-3">
+							<p>
+								<strong>Email :</strong>
+								{{ user.email }}</p>
+							<p>
+								<strong>Prénom :</strong>
+								{{ user.firstname }}</p>
+							<p>
+								<strong>Nom :</strong>
+								{{ user.lastname }}</p>
 
-            {% if isOAuthUser %}
-            <div class="alert alert-info mt-3">
-              <p class="fa fa-info-circle">
-                Vous êtes actuellement connecté via
-                {{ currentOauthProvider | capitalize }}
-              </p>
-              {% if connectedProviders|length > 1 %}
-              <p class="mt-2">Vos comptes liés :</p>
-              <ul>
-                {% for provider in connectedProviders %}
-                <li>{{ provider | capitalize }}</li>
-                {% endfor %}
-              </ul>
-              {% endif %}
-            </div>
-            {% endif %}
-          </div>
-        </div>
-      </div>
-    </div>
+							{% if isOAuthUser %}
+								<div class="alert alert-info mt-3">
+									<p class="fa fa-info-circle">
+										Vous êtes actuellement connecté via
+										{{ currentOauthProvider | capitalize }}
+									</p>
+									{% if connectedProviders|length > 1 %}
+										<p class="mt-2">Vos comptes liés :</p>
+										<ul>
+											{% for provider in connectedProviders %}
+												<li>{{ provider | capitalize }}</li>
+											{% endfor %}
+										</ul>
+									{% endif %}
+								</div>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			</div>
 
-    <div class="col-md-6">
-      {% if not isOAuthUser %} 
-      {# Formulaire de modification du profil pour les utilisateurs non-OAuth #}
-      <div class="card mb-4">
-        <div class="card-body">
-          <h5 class="card-title">Modifier mes informations</h5>
-          {{ form_start(form) }}
-          <div class="form-floating mb-3">
-            {{ form_widget(form.email) }}
-            {{ form_label(form.email) }}
-            {{ form_errors(form.email) }}
-          </div>
-          <div class="form-floating mb-3">
-            {{ form_widget(form.firstname.firstnameField) }}
-            {{ form_label(form.firstname.firstnameField) }}
-            {{ form_errors(form.firstname.firstnameField) }}
-          </div>
-          <div class="form-floating mb-3">
-            {{ form_widget(form.lastname.lastnameField) }}
-            {{ form_label(form.lastname.lastnameField) }}
-            {{ form_errors(form.lastname.lastnameField) }}
-          </div>
-          <button type="submit" class="btn btn-primary">Enregistrer</button>
-          {{ form_end(form) }}
-        </div>
-      </div>
+			<div class="col-md-6">
+				{% if not isOAuthUser %}
+					{# Formulaire de modification du profil pour les utilisateurs non-OAuth #}
+					<div class="card mb-4">
+						<div class="card-body">
+							<h5 class="card-title">Modifier mes informations</h5>
+							{{ form_start(form) }}
+							<div class="form-floating mb-3">
+								{{ form_widget(form.email) }}
+								{{ form_label(form.email) }}
+								{{ form_errors(form.email) }}
+							</div>
+							<div class="form-floating mb-3">
+								{{ form_widget(form.firstname.firstnameField) }}
+								{{ form_label(form.firstname.firstnameField) }}
+								{{ form_errors(form.firstname.firstnameField) }}
+							</div>
+							<div class="form-floating mb-3">
+								{{ form_widget(form.lastname.lastnameField) }}
+								{{ form_label(form.lastname.lastnameField) }}
+								{{ form_errors(form.lastname.lastnameField) }}
+							</div>
+							<button type="submit" class="btn btn-primary">Enregistrer</button>
+							{{ form_end(form) }}
+						</div>
+					</div>
 
-      {# Formulaire de changement de mot de passe pour utilisateurs non-OAuth #}
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Changer mon mot de passe</h5>
-          {{ form_start(passwordForm) }}
-          <div class="form-floating mb-3">
-            {{ form_widget(passwordForm.currentPassword) }}
-            {{ form_label(passwordForm.currentPassword) }}
-            {{ form_errors(passwordForm.currentPassword) }}
-          </div>
-          <div class="form-floating mb-3">
-            {{ form_widget(passwordForm.plainPassword.password.first) }}
-            {{ form_label(passwordForm.plainPassword.password.first) }}
-            {{ form_errors(passwordForm.plainPassword.password.first) }}
-          </div>
-          <div class="form-floating mb-3">
-            {{ form_widget(passwordForm.plainPassword.password.second) }}
-            {{ form_label(passwordForm.plainPassword.password.second) }}
-            {{ form_errors(passwordForm.plainPassword.password.second) }}
-          </div>
-          <button type="submit" class="btn btn-primary">
-            Changer le mot de passe
-          </button>
-          {{ form_end(passwordForm) }}
-        </div>
-      </div>
-      {% else %} {# Message pour les utilisateurs OAuth #}
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">
-            Gestion du compte {{ currentOauthProvider | capitalize }}
-          </h5>
-          <p>
-            Vous êtes connecté via {{ currentOauthProvider | capitalize }}. Vos
-            informations de compte sont gérées par
-            {{ currentOauthProvider | capitalize }}.
-          </p>
-          <p>
-            Pour modifier votre email ou mot de passe, veuillez vous rendre sur
-            votre compte {{ currentOauthProvider | capitalize }}.
-          </p>
+					{# Formulaire de changement de mot de passe pour utilisateurs non-OAuth #}
+					<div class="card">
+						<div class="card-body">
+							<h5 class="card-title">Changer mon mot de passe</h5>
+							{{ form_start(passwordForm) }}
+							<div class="form-floating mb-3">
+								{{ form_widget(passwordForm.currentPassword) }}
+								{{ form_label(passwordForm.currentPassword) }}
+								{{ form_errors(passwordForm.currentPassword) }}
+							</div>
+							<div class="form-floating mb-3">
+								{{ form_widget(passwordForm.plainPassword.password.first) }}
+								{{ form_label(passwordForm.plainPassword.password.first) }}
+								{{ form_errors(passwordForm.plainPassword.password.first) }}
+							</div>
+							<div class="form-floating mb-3">
+								{{ form_widget(passwordForm.plainPassword.password.second) }}
+								{{ form_label(passwordForm.plainPassword.password.second) }}
+								{{ form_errors(passwordForm.plainPassword.password.second) }}
+							</div>
+							<button type="submit" class="btn btn-primary">
+								Changer le mot de passe
+							</button>
+							{{ form_end(passwordForm) }}
+						</div>
+					</div>
+				{% else %}
+					{# Message pour les utilisateurs OAuth #}
+					<div class="card">
+						<div class="card-body">
+							<h5 class="card-title">
+								Gestion du compte
+								{{ currentOauthProvider | capitalize }}
+							</h5>
+							<p>
+								Vous êtes connecté via
+								{{ currentOauthProvider | capitalize }}.Vos informations de compte sont gérées par
+								{{ currentOauthProvider | capitalize }}.
+							</p>
+							<p>
+								Pour modifier votre email ou mot de passe, veuillez vous rendre sur votre compte
+								{{ currentOauthProvider | capitalize }}.
+							</p>
 
-          {% if currentOauthProvider == 'google' %}
-          <a
-            href="https://myaccount.google.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="btn btn-outline-primary"
-          >
-            Gérer mon compte Google
-          </a>
-          {% elseif currentOauthProvider == 'facebook' %}
-          <a
-            href="https://www.facebook.com/settings"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="btn btn-outline-primary"
-          >
-            Gérer mon compte Facebook
-          </a>
-          {% endif %} {% if connectedProviders|length > 1 %}
-          <div class="mt-4">
-            <h6>Autres comptes liés</h6>
-            <div class="list-group">
-              {% for provider in connectedProviders %} {% if provider !=
+							{% if currentOauthProvider == 'google' %}
+								<a href="https://myaccount.google.com/" target="_blank" rel="noopener noreferrer" class="btn btn-action">
+									Gérer mon compte Google
+								</a>
+							{% elseif currentOauthProvider == 'facebook' %}
+								<a href="https://www.facebook.com/settings" target="_blank" rel="noopener noreferrer" class="btn btn-action">
+									Gérer mon compte Facebook
+								</a>
+							{% endif %}
+							{% if connectedProviders|length > 1 %}
+								<div class="mt-4">
+									<h6>Autres comptes liés</h6>
+									<div class="list-group">
+										{% for provider in connectedProviders %}
+											{% if provider !=
               currentOauthProvider %}
-              <div class="list-group-item">
-                {{ provider | capitalize }}
-                {% if provider == 'google' %}
-                <a
-                  href="https://myaccount.google.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="btn btn-sm btn-outline-secondary float-end"
-                >
-                  Gérer
-                </a>
-                {% elseif provider == 'facebook' %}
-                <a
-                  href="https://www.facebook.com/settings"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="btn btn-sm btn-outline-secondary float-end"
-                >
-                  Gérer
-                </a>
-                {% endif %}
-              </div>
-              {% endif %} {% endfor %}
-            </div>
-          </div>
-          {% endif %}
-        </div>
-      </div>
-      {% endif %}
-    </div>
-  </div>
-</div>
+												<div class="list-group-item">
+													{{ provider | capitalize }}
+													{% if provider == 'google' %}
+														<a href="https://myaccount.google.com/" target="_blank" rel="noopener noreferrer" class="btn btn-action btn-sm float-end">
+															Gérer
+														</a>
+													{% elseif provider == 'facebook' %}
+														<a href="https://www.facebook.com/settings" target="_blank" rel="noopener noreferrer" class="btn btn-action btn-sm float-end">
+															Gérer
+														</a>
+													{% endif %}
+												</div>
+											{% endif %}
+										{% endfor %}
+									</div>
+								</div>
+							{% endif %}
+						</div>
+					</div>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	{# Liste des evenements du user #}
+	<div class="container-fluid mt-4 px-5 bg-secondary">
+		<h2 class="py-4">Mes événements auxquels je participe</h2>
+		<div class="row">
+			{% for event in participatedEvents %}
+				<div class="col-md-4 mb-4">
+					<div class="card h-100">
+						<img src="{{ event.getSrcPhoto() }}" class="card-img-top event-image" alt="{{ event.name }}"/>
+						<div class="card-body">
+							<h5 class="card-title">{{ event.name }}</h5>
+							<h6 class="card-subtitle mb-2 text-muted">
+								{{ event.category.name }}
+							</h6>
+							<p class="card-text">
+								<i class="bi bi-calendar-event"></i>
+								{{ event.startDate|date('d/m/Y H:i') }}<br/>
+								<i class="bi bi-geo-alt"></i>
+								{{ event.location }}
+							</p>
+							<div class="d-flex justify-content-between align-items-center">
+								<a href="{{ path('app_event_show', { id: event.id }) }}" class="btn btn-action">
+									Voir les détails
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				{% if loop.index % 3 == 0 and not loop.last %}
+				</div>
+				<div class="row">
+				{% endif %}
+			{% endfor %}
+		</div>
+
+		{# Evenements créés par l'utilisateur #}
+		<h2 class="py-4">Mes événements créés</h2>
+		<div class="row">
+			{% for event in organizedEvents %}
+				<div class="col-md-4 mb-4">
+					<div class="card h-100">
+						<img src="{{ event.getSrcPhoto() }}" class="card-img-top event-image" alt="{{ event.name }}"/>
+						<div class="card-body">
+							<h5 class="card-title">{{ event.name }}</h5>
+							<h6 class="card-subtitle mb-2 text-muted">
+								{{ event.category.name }}
+							</h6>
+							<p class="card-text">
+								<i class="bi bi-calendar-event"></i>
+								{{ event.startDate|date('d/m/Y H:i') }}<br/>
+								<i class="bi bi-geo-alt"></i>
+								{{ event.location }}
+							</p>
+							<div class="d-flex justify-content-between align-items-center">
+								<a href="{{ path('app_event_show', { id: event.id }) }}" class="btn btn-action">
+									Voir les détails
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				{% if loop.index % 3 == 0 and not loop.last %}
+				</div>
+				<div class="row">
+				{% endif %}
+			{% endfor %}
+		</div>
+	</div>
 {% endblock %}

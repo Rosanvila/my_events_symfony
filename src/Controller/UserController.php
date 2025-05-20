@@ -22,6 +22,21 @@ final class UserController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
+        $events = $user->getEvents();
+
+        // Récupérer les événements où l'utilisateur est participant
+        $participatedEvents = [];
+        foreach ($user->getParticipations() as $participation) {
+            $participatedEvents[] = $participation->getEvent();
+        }
+
+        // Récupérer les événements où l'utilisateur est organisateur
+        $organizedEvents = [];
+        foreach ($events as $event) {
+            if ($event->getOrganizer()->getId() === $user->getId()) {
+                $organizedEvents[] = $event;
+            }
+        }
 
         // Déterminer si l'utilisateur est connecté via OAuth2
         $isOAuthUser = $user->isOAuth();
@@ -33,11 +48,9 @@ final class UserController extends AbstractController
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                // Récupérer les données des champs non mappés
                 $firstname = $form->get('firstname')->get('firstnameField')->getData();
                 $lastname = $form->get('lastname')->get('lastnameField')->getData();
 
-                // Mettre à jour l'utilisateur
                 $user->setFirstname($firstname);
                 $user->setLastname($lastname);
 
@@ -67,7 +80,7 @@ final class UserController extends AbstractController
             }
         }
 
-        // Récupérer le fournisseur OAuth actuel depuis la session
+        // Récupérer le fournisseur OAuth actuel depuis la session via AbstractOAuthAuthenticator
         $currentOauthProvider = $request->getSession()->get('oauth_provider');
 
         // Si pas de fournisseur en session mais utilisateur OAuth, prendre le premier disponible
@@ -89,7 +102,9 @@ final class UserController extends AbstractController
             'passwordForm' => $passwordForm,
             'isOAuthUser' => $isOAuthUser,
             'currentOauthProvider' => $currentOauthProvider,
-            'connectedProviders' => $connectedProviders
+            'connectedProviders' => $connectedProviders,
+            'participatedEvents' => $participatedEvents,
+            'organizedEvents' => $organizedEvents
         ]);
     }
 }
