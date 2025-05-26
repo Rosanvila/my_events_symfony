@@ -80,9 +80,9 @@ class EventType extends AbstractType
             ->add('startDate', DateTimeType::class, [
                 'label' => 'Date de début',
                 'widget' => 'single_text',
-                'input' => 'datetime',
+                'input' => 'datetime_immutable',
                 'html5' => true,
-                'model_timezone' => 'Europe/Paris',
+                'model_timezone' => 'UTC',
                 'view_timezone' => 'Europe/Paris',
                 'attr' => [
                     'class' => 'form-control rounded-pill',
@@ -92,9 +92,9 @@ class EventType extends AbstractType
             ->add('endDate', DateTimeType::class, [
                 'label' => 'Date de fin',
                 'widget' => 'single_text',
-                'input' => 'datetime',
+                'input' => 'datetime_immutable',
                 'html5' => true,
-                'model_timezone' => 'Europe/Paris',
+                'model_timezone' => 'UTC',
                 'view_timezone' => 'Europe/Paris',
                 'attr' => [
                     'class' => 'form-control rounded-pill',

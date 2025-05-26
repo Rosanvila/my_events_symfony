@@ -67,7 +67,7 @@ final class EventSearch
 
     public function getEvents(): array
     {
-        $startDate = $this->startDate ? new \DateTime($this->startDate) : null;
+        $startDate = $this->startDate ? new \DateTimeImmutable($this->startDate, new \DateTimeZone('UTC')) : null;
 
         return $this->eventRepository->search([
             'name' => $this->sanitizeInput($this->name),

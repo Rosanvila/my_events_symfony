@@ -240,7 +240,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
 
     public function getEmailAuthCodeExpiresAt(): \DateTimeImmutable|null
     {
-        return new \DateTimeImmutable($this->email_auth_code_expires_at->format('Y-m-d H:i:s'));
+        if ($this->email_auth_code_expires_at === null) {
+            return null;
+        }
+        return new \DateTimeImmutable($this->email_auth_code_expires_at->format('Y-m-d H:i:s'), new \DateTimeZone('UTC'));
     }
 
     public function setEmailAuthCodeExpiresAt(\DateTimeImmutable $expiresAt): void

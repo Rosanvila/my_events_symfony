@@ -73,7 +73,7 @@ class EventRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('e')
             ->where('e.startDate > :now')
-            ->setParameter('now', new \DateTime())
+            ->setParameter('now', new \DateTimeImmutable('now', new \DateTimeZone('UTC')))
             ->orderBy('e.startDate', 'ASC')
             ->setMaxResults($limit)
             ->getQuery()
