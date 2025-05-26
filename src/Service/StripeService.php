@@ -6,6 +6,7 @@ use App\Entity\Event;
 use App\Entity\Payment;
 use App\Entity\Participation;
 use App\Entity\User;
+use App\Exception\PaymentException;
 use Doctrine\ORM\EntityManagerInterface;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
@@ -38,19 +39,9 @@ class StripeService
     public function createCheckoutSession(Event $event, User $user): Session
     {
         try {
-            $existingParticipation = $this->entityManager->getRepository(Participation::class)
-                ->findOneBy(['user' => $user, 'event' => $event]);
+            $this->validateEventAndUser($event, $user);
 
-            if ($existingParticipation) {
-                throw new \Exception('Vous êtes déjà inscrit à cet événement.');
-            }
-
-            if ($event->getParticipants()->count() >= $event->getMaxParticipants()) {
-                throw new \Exception('Cet événement est complet.');
-            }
-
-            // Création de la session
-            $session = Session::create([
+            return Session::create([
                 'payment_method_types' => ['card'],
                 'line_items' => [[
                     'price_data' => [
@@ -71,65 +62,15 @@ class StripeService
                 'success_url' => $this->urlGenerator->generate('app_payment_success', [], UrlGeneratorInterface::ABSOLUTE_URL) . '?session_id={CHECKOUT_SESSION_ID}',
                 'cancel_url' => $this->urlGenerator->generate('app_payment_cancel', [], UrlGeneratorInterface::ABSOLUTE_URL),
             ]);
-
-            return $session;
         } catch (ApiErrorException $e) {
-            throw new \Exception('Erreur lors de la création de la session de paiement : ' . $e->getMessage());
-        } catch (\Exception $e) {
-            throw new \Exception('Une erreur inattendue est survenue : ' . $e->getMessage());
+            throw new PaymentException('Erreur lors de la création de la session de paiement : ' . $e->getMessage());
         }
     }
-
 
     public function getPaymentBySessionId(string $sessionId): ?Payment
     {
         return $this->entityManager->getRepository(Payment::class)
             ->findOneBy(['stripe_session_id' => $sessionId]);
-    }
-
-
-    private function handleSuccessfulPayment(Session $session): void
-    {
-        try {
-            if (!isset($session->metadata['event_id']) || !isset($session->metadata['user_id'])) {
-                throw new \Exception('Métadonnées manquantes dans la session');
-            }
-
-            $event = $this->entityManager->getRepository(Event::class)
-                ->find($session->metadata['event_id']);
-            $user = $this->entityManager->getRepository(User::class)
-                ->find($session->metadata['user_id']);
-
-            if (!$event || !$user) {
-                throw new \Exception('Événement ou utilisateur non trouvé');
-            }
-
-            $existingPayment = $this->getPaymentBySessionId($session->id);
-
-            if ($existingPayment) {
-                return;
-            }
-
-            $participation = new Participation();
-            $participation->setUser($user);
-            $participation->setEvent($event);
-            $participation->setStatus(self::PARTICIPATION_STATUS_CONFIRMED);
-
-            $payment = new Payment();
-            $payment->setUser($user);
-            $payment->setEvent($event);
-            $payment->setAmount($event->getPrice());
-            $payment->setCurrency(self::CURRENCY_EUR);
-            $payment->setStatus(self::PAYMENT_STATUS_COMPLETED);
-            $payment->setStripeSessionId($session->id);
-            $payment->setStripePaymentIntentId($session->payment_intent);
-
-            $this->entityManager->persist($participation);
-            $this->entityManager->persist($payment);
-            $this->entityManager->flush();
-        } catch (\Exception $e) {
-            throw new \Exception('Erreur lors du traitement du paiement : ' . $e->getMessage());
-        }
     }
 
     public function handleWebhook(Request $request): void
@@ -152,7 +93,8 @@ class StripeService
 
                 case 'payment_intent.succeeded':
                     $paymentIntent = $event->data->object;
-                    $this->handleSuccessfulPayment($paymentIntent);
+                    $session = Session::retrieve($paymentIntent->metadata->session_id);
+                    $this->handleSuccessfulPayment($session);
                     break;
 
                 default:
@@ -163,5 +105,89 @@ class StripeService
         } catch (\Exception $e) {
             throw new \Exception('Erreur lors du traitement du webhook : ' . $e->getMessage());
         }
+    }
+
+    public function handleSuccessfulPayment(Session $session): void
+    {
+        try {
+            if (!isset($session->metadata['event_id']) || !isset($session->metadata['user_id'])) {
+                throw new \Exception('Métadonnées manquantes dans la session');
+            }
+
+            if ($this->getPaymentBySessionId($session->id)) {
+                return;
+            }
+
+            $this->validateSessionMetadata($session);
+
+            $event = $this->entityManager->getRepository(Event::class)
+                ->find($session->metadata['event_id']);
+            $user = $this->entityManager->getRepository(User::class)
+                ->find($session->metadata['user_id']);
+
+            if (!$event || !$user) {
+                throw new PaymentException('Événement ou utilisateur non trouvé');
+            }
+
+            $this->entityManager->beginTransaction();
+
+            try {
+                $participation = $this->createParticipation($user, $event);
+                $payment = $this->createPayment($user, $event, $session);
+
+                $this->entityManager->persist($participation);
+                $this->entityManager->persist($payment);
+                $this->entityManager->flush();
+                $this->entityManager->commit();
+            } catch (\Exception $e) {
+                $this->entityManager->rollback();
+                throw new PaymentException('Erreur lors de la création du paiement : ' . $e->getMessage());
+            }
+        } catch (\Exception $e) {
+            throw new \Exception('Erreur lors du traitement du paiement : ' . $e->getMessage());
+        }
+    }
+
+    private function validateEventAndUser(Event $event, User $user): void
+    {
+        $existingParticipation = $this->entityManager->getRepository(Participation::class)
+            ->findOneBy(['user' => $user, 'event' => $event]);
+
+        if ($existingParticipation) {
+            throw new PaymentException('Vous êtes déjà inscrit à cet événement.');
+        }
+
+        if ($event->getParticipants()->count() >= $event->getMaxParticipants()) {
+            throw new PaymentException('Cet événement est complet.');
+        }
+    }
+
+    private function validateSessionMetadata(Session $session): void
+    {
+        if (!isset($session->metadata['event_id']) || !isset($session->metadata['user_id'])) {
+            throw new PaymentException('Métadonnées manquantes dans la session');
+        }
+    }
+
+    private function createParticipation(User $user, Event $event): Participation
+    {
+        $participation = new Participation();
+        $participation->setUser($user);
+        $participation->setEvent($event);
+        $participation->setStatus(self::PARTICIPATION_STATUS_CONFIRMED);
+        return $participation;
+    }
+
+    private function createPayment(User $user, Event $event, Session $session): Payment
+    {
+        $payment = new Payment();
+        $payment->setUser($user);
+        $payment->setEvent($event);
+        $payment->setAmount($event->getPrice());
+        $payment->setCurrency(self::CURRENCY_EUR);
+        $payment->setStatus(self::PAYMENT_STATUS_COMPLETED);
+        $payment->setStripeSessionId($session->id);
+        $payment->setStripePaymentIntentId($session->payment_intent);
+        return $payment;
     }
 }

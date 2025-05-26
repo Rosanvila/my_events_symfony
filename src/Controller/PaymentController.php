@@ -60,7 +60,10 @@ class PaymentController extends AbstractController
             $payment = $this->stripeService->getPaymentBySessionId($session_id);
 
             if (!$payment) {
-                throw new \Exception('Paiement non trouvé.');
+                $this->stripeService->handleSuccessfulPayment($session);
+                $payment = $this->stripeService->getPaymentBySessionId($session_id);
+            } else {
+                throw new \Exception('Le paiement n\'existe pas.');
             }
 
             // Envoyer le message pour l'email de validation
