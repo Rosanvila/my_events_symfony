@@ -13,6 +13,7 @@ use danielburger1337\SchebTwoFactorBundle\Model\TwoFactorEmailInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use DateTimeImmutable;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFactorEmailInterface
@@ -57,8 +58,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
     #[ORM\Column(type: "string", nullable: true)]
     private ?string $authCode = null;
 
-    #[ORM\Column(type: 'datetime', nullable: true)]
-    private $email_auth_code_expires_at = null;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?DateTimeImmutable $email_auth_code_expires_at = null;
 
 
     #[ORM\Column(type: 'boolean')]
@@ -238,15 +239,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
         $this->authCode = $authCode;
     }
 
-    public function getEmailAuthCodeExpiresAt(): \DateTimeImmutable|null
+    public function getEmailAuthCodeExpiresAt(): ?DateTimeImmutable
     {
-        if ($this->email_auth_code_expires_at === null) {
-            return null;
-        }
-        return new \DateTimeImmutable($this->email_auth_code_expires_at->format('Y-m-d H:i:s'), new \DateTimeZone('UTC'));
+        return $this->email_auth_code_expires_at;
     }
 
-    public function setEmailAuthCodeExpiresAt(\DateTimeImmutable $expiresAt): void
+    public function setEmailAuthCodeExpiresAt(DateTimeImmutable $expiresAt): void
     {
         $this->email_auth_code_expires_at = $expiresAt;
     }

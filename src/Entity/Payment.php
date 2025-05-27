@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\PaymentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\DBAL\Types\Types;
+use DateTimeImmutable;
 
 #[ORM\Entity(repositoryClass: PaymentRepository::class)]
 class Payment
@@ -36,12 +38,12 @@ class Payment
     #[ORM\Column(length: 20)]
     private ?string $status = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $created_at = null;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    private ?DateTimeImmutable $created_at = null;
 
     public function __construct()
     {
-        $this->created_at = new \DateTimeImmutable();
+        $this->created_at = new DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -126,12 +128,12 @@ class Payment
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): static
+    public function setCreatedAt(DateTimeImmutable $created_at): static
     {
         $this->created_at = $created_at;
         return $this;

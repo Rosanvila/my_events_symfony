@@ -62,11 +62,13 @@ class PaymentController extends AbstractController
             if (!$payment) {
                 $this->stripeService->handleSuccessfulPayment($session);
                 $payment = $this->stripeService->getPaymentBySessionId($session_id);
-            } else {
-                throw new \Exception('Le paiement n\'existe pas.');
+
+                if (!$payment) {
+                    throw new \Exception('Impossible de créer le paiement.');
+                }
             }
 
-            // Envoyer le message pour l'email de validation
+            // Envoyer le message via messenger
             $this->bus->dispatch(new PaymentValidationEmailMessage(
                 $payment->getId(),
                 $payment->getUser()->getEmail()

@@ -7,6 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Entity\User;
 use App\Entity\Event;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\DBAL\Types\Types;
+use DateTimeImmutable;
 
 #[ORM\Entity(repositoryClass: ParticipationRepository::class)]
 class Participation
@@ -27,14 +29,14 @@ class Participation
     #[ORM\Column(type: 'string', length: 50)]
     private ?string $status = null;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     #[Assert\NotBlank]
     #[Assert\DateTime]
-    private \DateTimeInterface $registeredAt;
+    private ?DateTimeImmutable $createdAt = null;
 
     public function __construct()
     {
-        $this->registeredAt = new \DateTimeImmutable();
+        $this->createdAt = new DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -54,15 +56,14 @@ class Participation
         return $this;
     }
 
-    public function getRegisteredAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTimeImmutable
     {
-        return $this->registeredAt;
+        return $this->createdAt;
     }
 
-    public function setRegisteredAt(\DateTimeInterface $registeredAt): static
+    public function setCreatedAt(DateTimeImmutable $createdAt): static
     {
-        $this->registeredAt = $registeredAt;
-
+        $this->createdAt = $createdAt;
         return $this;
     }
 

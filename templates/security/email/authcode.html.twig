@@ -4,7 +4,7 @@
 {% block preheader %}{{ subject|trans() }}{% endblock %}
 
 {% block body %}
-     {{ "mailer.authentication_code.body.start"|trans()|nl2br }}
+     <h2>Code de vérification</h2>
      <p style="font-weight: bold;">{{ authCode }}</p>
-     {{ "mailer.authentication_code.body.end"|trans({'%authCode%': authCode, '%expiresAt%': expiresAt})|nl2br|raw }}
+     <p>Ce code expirera le {{ expiresAt|date('d/m/Y') }} à {{ expiresAt|date('H:i') }}.</p>
 {% endblock %}

@@ -56,7 +56,10 @@ class ResetPasswordController extends AbstractController
             /** @var string $email */
             $email = $form->get('email')->getData();
 
-            return $this->processSendingPasswordResetEmail($email, $mailer, $translator
+            return $this->processSendingPasswordResetEmail(
+                $email,
+                $mailer,
+                $translator
             );
         }
 
@@ -124,7 +127,7 @@ class ResetPasswordController extends AbstractController
             $this->resetPasswordHelper->removeResetRequest($token);
 
             /** @var string $plainPassword */
-            $plainPassword = $form->get('plainPassword')->getData();
+            $plainPassword = $form->get('plainPassword')->get('password')->getData();
 
             // Encode(hash) the plain password, and set it.
             $user->setPassword($passwordHasher->hashPassword($user, $plainPassword));
@@ -174,8 +177,7 @@ class ResetPasswordController extends AbstractController
             ->htmlTemplate('reset_password/email.html.twig')
             ->context([
                 'resetToken' => $resetToken,
-            ])
-        ;
+            ]);
 
         if (null !== $this->senderAddress) {
             $email->from($this->senderAddress);
