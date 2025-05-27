@@ -33,6 +33,7 @@ class ResetPasswordController extends AbstractController
     public function __construct(
         private ResetPasswordHelperInterface $resetPasswordHelper,
         private EntityManagerInterface $entityManager,
+        #[Autowire(env: 'RESET_PASSWORD_SUBJECT')] private readonly string $subject,
         #[Autowire(env: 'AUTH_CODE_SENDER_EMAIL')] string|null $senderEmail,
         #[Autowire(env: 'AUTH_CODE_SENDER_NAME')] ?string $senderName = null,
     ) {
@@ -53,11 +54,8 @@ class ResetPasswordController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var string $email */
-            $email = $form->get('email')->getData();
-
             return $this->processSendingPasswordResetEmail(
-                $email,
+                $form->get('email')->getData(),
                 $mailer,
                 $translator
             );
@@ -106,7 +104,6 @@ class ResetPasswordController extends AbstractController
         }
 
         try {
-            /** @var User $user */
             $user = $this->resetPasswordHelper->validateTokenAndFetchUser($token);
         } catch (ResetPasswordExceptionInterface $e) {
             $this->addFlash('reset_password_error', sprintf(
@@ -126,17 +123,19 @@ class ResetPasswordController extends AbstractController
             // A password reset token should be used only once, remove it.
             $this->resetPasswordHelper->removeResetRequest($token);
 
-            /** @var string $plainPassword */
-            $plainPassword = $form->get('plainPassword')->get('password')->getData();
-
             // Encode(hash) the plain password, and set it.
-            $user->setPassword($passwordHasher->hashPassword($user, $plainPassword));
+            $encodedPassword = $passwordHasher->hashPassword(
+                $user,
+                $form->get('plainPassword')->get('password')->getData()
+            );
+
+            $user->setPassword($encodedPassword);
             $this->entityManager->flush();
 
             // The session is cleaned up after the password has been changed.
             $this->cleanSessionAfterReset();
 
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('app_index');
         }
 
         return $this->render('reset_password/reset.html.twig', [

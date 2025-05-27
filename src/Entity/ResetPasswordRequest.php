@@ -6,7 +6,6 @@ use App\Repository\ResetPasswordRequestRepository;
 use Doctrine\ORM\Mapping as ORM;
 use SymfonyCasts\Bundle\ResetPassword\Model\ResetPasswordRequestInterface;
 use SymfonyCasts\Bundle\ResetPassword\Model\ResetPasswordRequestTrait;
-use Doctrine\DBAL\Types\Types;
 use DateTimeImmutable;
 
 #[ORM\Entity(repositoryClass: ResetPasswordRequestRepository::class)]

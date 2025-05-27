@@ -61,45 +61,62 @@ final class UserController extends AbstractController
         }
 
         // Formulaire de changement de mot de passe (uniquement pour les utilisateurs non-OAuth)
-        $passwordForm = null;
+        $changePasswordForm = null;
         if (!$isOAuthUser) {
-            $passwordForm = $this->createForm(ChangePasswordFormType::class);
-            $passwordForm->handleRequest($request);
+            $changePasswordForm = $this->createForm(ChangePasswordFormType::class);
+            $changePasswordForm->handleRequest($request);
 
-            if ($passwordForm->isSubmitted() && $passwordForm->isValid()) {
-                $user->setPassword(
-                    $passwordHasher->hashPassword(
-                        $user,
-                        $passwordForm->get('plainPassword')->get('password')->getData()
-                    )
-                );
+            if ($changePasswordForm->isSubmitted() && $changePasswordForm->isValid()) {
+                $email = $changePasswordForm->get('email')->getData();
+                $currentPassword = $changePasswordForm->get('currentPassword')->getData();
+                $plainPassword = $changePasswordForm->get('plainPassword')->get('password')->getData();
 
+                // Vérifier si l'email correspond à celui de l'utilisateur en session
+                if ($email !== $user->getEmail()) {
+                    $this->addFlash('error', 'L\'email ne correspond pas à votre compte.');
+                    return $this->redirectToRoute('app_user');
+                }
+
+                // Vérifier si le mot de passe actuel est correct
+                if (!$passwordHasher->isPasswordValid($user, $currentPassword)) {
+                    $this->addFlash('error', 'Le mot de passe actuel est incorrect.');
+                    return $this->redirectToRoute('app_user');
+                }
+                // Si tout est bon, procédez au changement de mot de passe
+                $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
+                $user->setPassword($hashedPassword);
+
+                $entityManager->persist($user);
                 $entityManager->flush();
+
                 $this->addFlash('success', 'Votre mot de passe a été modifié avec succès.');
                 return $this->redirectToRoute('app_user');
             }
-        }
 
-        // Récupérer le fournisseur OAuth actuel depuis la session via AbstractOAuthAuthenticator
-        $currentOauthProvider = $request->getSession()->get('oauth_provider');
+            // Récupérer le fournisseur OAuth actuel depuis la session via AbstractOAuthAuthenticator
+            $currentOauthProvider = $request->getSession()->get('oauth_provider');
 
-        // Si pas de fournisseur en session mais utilisateur OAuth, prendre le premier disponible
-        if ($isOAuthUser && !$currentOauthProvider && !$user->getOauthConnections()->isEmpty()) {
-            $currentOauthProvider = $user->getOauthConnections()->first()->getProvider();
-        }
+            // Si pas de fournisseur en session mais utilisateur OAuth, prendre le premier disponible
+            if ($isOAuthUser && !$currentOauthProvider && !$user->getOauthConnections()->isEmpty()) {
+                $currentOauthProvider = $user->getOauthConnections()->first()->getProvider();
+            }
 
-        // Récupérer tous les fournisseurs OAuth liés à l'utilisateur
-        $connectedProviders = [];
-        if ($isOAuthUser) {
-            foreach ($user->getOauthConnections() as $connection) {
-                $connectedProviders[] = $connection->getProvider();
+            // Récupérer tous les fournisseurs OAuth liés à l'utilisateur
+            $connectedProviders = [];
+            if ($isOAuthUser) {
+                foreach ($user->getOauthConnections() as $connection) {
+                    $connectedProviders[] = $connection->getProvider();
+                }
             }
         }
+
+        $currentOauthProvider = null;
+        $connectedProviders = [];
 
         return $this->render('user/index.html.twig', [
             'user' => $user,
             'form' => $form,
-            'passwordForm' => $passwordForm,
+            'changePasswordForm' => $changePasswordForm,
             'isOAuthUser' => $isOAuthUser,
             'currentOauthProvider' => $currentOauthProvider,
             'connectedProviders' => $connectedProviders,

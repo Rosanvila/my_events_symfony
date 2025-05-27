@@ -27,7 +27,6 @@ class PasswordConfirmType extends AbstractType
                     'attr' => [
                         'autocomplete' => 'new-password',
                         'class' => 'form-control',
-                        'placeholder' => ' ',
                     ],
                 ],
                 'first_options' => [
@@ -41,32 +40,19 @@ class PasswordConfirmType extends AbstractType
                             'max' => 4096,
                         ]),
                         new PasswordStrength([], 2),
-                        new NotCompromisedPassword([
-                            'message' => 'Ce mot de passe a été compromis. Veuillez en choisir un autre.',
-                        ]),
-
+                        new NotCompromisedPassword(),
                     ],
                     'label' => 'Mot de passe',
                     'attr' => [
-                        'placeholder' => '',
+                        'placeholder' => 'Votre mot de passe',
                         'class' => 'form-control',
-                        'placeholder' => ' ',
                     ],
                 ],
                 'second_options' => [
                     'label' => 'Confirmez le mot de passe',
                     'attr' => [
                         'placeholder' => 'Confirmez votre mot de passe',
-                    ],
-                    'invalid_message' => 'Les mots de passe ne correspondent pas.',
-                    'mapped' => false,
-                ],
-                'second_options' => [
-                    'label' => 'Confirmez le mot de passe',
-                    'attr' => [
-                        'placeholder' => 'Confirmez votre mot de passe',
                         'class' => 'form-control',
-                        'placeholder' => ' ',
                     ],
                 ],
                 'invalid_message' => 'Les mots de passe ne correspondent pas.',

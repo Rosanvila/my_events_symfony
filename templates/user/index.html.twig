@@ -59,11 +59,6 @@ block body %}
 							<h5 class="card-title">Modifier mes informations</h5>
 							{{ form_start(form) }}
 							<div class="form-floating mb-3">
-								{{ form_widget(form.email) }}
-								{{ form_label(form.email) }}
-								{{ form_errors(form.email) }}
-							</div>
-							<div class="form-floating mb-3">
 								{{ form_widget(form.firstname.firstnameField) }}
 								{{ form_label(form.firstname.firstnameField) }}
 								{{ form_errors(form.firstname.firstnameField) }}
@@ -82,26 +77,31 @@ block body %}
 					<div class="card">
 						<div class="card-body">
 							<h5 class="card-title">Changer mon mot de passe</h5>
-							{{ form_start(passwordForm) }}
+							{{ form_start(changePasswordForm) }}
 							<div class="form-floating mb-3">
-								{{ form_widget(passwordForm.currentPassword) }}
-								{{ form_label(passwordForm.currentPassword) }}
-								{{ form_errors(passwordForm.currentPassword) }}
+								{{ form_widget(changePasswordForm.currentPassword) }}
+								{{ form_label(changePasswordForm.currentPassword) }}
+								{{ form_errors(changePasswordForm.currentPassword) }}
 							</div>
 							<div class="form-floating mb-3">
-								{{ form_widget(passwordForm.plainPassword.password.first) }}
-								{{ form_label(passwordForm.plainPassword.password.first) }}
-								{{ form_errors(passwordForm.plainPassword.password.first) }}
+								{{ form_widget(changePasswordForm.email) }}
+								{{ form_label(changePasswordForm.email) }}
+								{{ form_errors(changePasswordForm.email) }}
 							</div>
 							<div class="form-floating mb-3">
-								{{ form_widget(passwordForm.plainPassword.password.second) }}
-								{{ form_label(passwordForm.plainPassword.password.second) }}
-								{{ form_errors(passwordForm.plainPassword.password.second) }}
+								{{ form_widget(changePasswordForm.plainPassword.password.first) }}
+								{{ form_label(changePasswordForm.plainPassword.password.first) }}
+								{{ form_errors(changePasswordForm.plainPassword.password.first) }}
+							</div>
+							<div class="form-floating mb-3">
+								{{ form_widget(changePasswordForm.plainPassword.password.second) }}
+								{{ form_label(changePasswordForm.plainPassword.password.second) }}
+								{{ form_errors(changePasswordForm.plainPassword.password.second) }}
 							</div>
 							<button type="submit" class="btn btn-primary">
 								Changer le mot de passe
 							</button>
-							{{ form_end(passwordForm) }}
+							{{ form_end(changePasswordForm) }}
 						</div>
 					</div>
 				{% else %}
