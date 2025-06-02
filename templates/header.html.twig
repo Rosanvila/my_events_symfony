@@ -1,47 +1,72 @@
 {% block javascripts %}
-		<script src="{{ asset('js/menu.js') }}" type="module"></script>
+<script src="{{ asset('js/menu.js') }}" type="module"></script>
 {% endblock %}
 
 <header>
-	{% set _route = app.request.get('_route') %}
-	{% set navItems =  [
-        {'route': 'app_discover', 'title': 'Découvrir'},
-        {'route': 'app_details', 'title': 'A propos'},
-        {'route': 'app_event_index', 'title': 'Créer un événement'},
-    ] %}
-	<nav class="navbar d-flex justify-content-between align-items-center">
-		<div class="container py-2">
-			<a href="{{ path('app_home') }}" class="navbar-brand">
-				<img src="{{ asset('img/SkillShare.svg') }}" alt="SkillShare">
-			</a>
-			<ul class="nav">
-				{% for item in navItems|slice(0, 2) %}
-					<li class="nav-item mx-3">
-						<a class="btn border border-dark rounded-pill nav-link py-1" {% if not is_granted('IS_AUTHENTICATED_FULLY') %} data-bs-toggle="modal" data-bs-target="#modalLogin" href="#" {% else %} href="#" {% endif %}>
-							{{ item.title }}
-						</a>
-					</li>
-				{% endfor %}
-			</ul>
-			<ul class="nav">
-				{% for item in navItems|slice(2) %}
-					<li class="nav-item mx-3">
-						<a class="btn border border-dark rounded-pill nav-link py-1" {% if not is_granted('IS_AUTHENTICATED_FULLY') %} data-bs-toggle="modal" data-bs-target="#modalLogin" href="#" {% else %} href="{{ path("app_event_new") }}" {% endif %}>
-							{{ item.title }}
-						</a>
-					</li>
-				{% endfor %}
-				<li class="nav-item mx-3">
-					{% if not is_granted('IS_AUTHENTICATED_FULLY') %}
-						<a class="btn btn-connexion rounded-pill py-1" data-bs-toggle="modal" data-bs-target="#modalLogin" href="#">Connexion</a>
-					{% endif %}
-					{% if is_granted('IS_AUTHENTICATED_FULLY') %}
-						<a class="btn btn-connexion rounded-pill py-1" href="{{ path('app_logout') }}">Déconnexion</a>
-						<a class="btn btn-connexion rounded-pill py-1" href="{{ path('app_user') }}">Mon profil</a>
-					{% endif %}
-				</li>
-			</ul>
-		</div>
-	</nav>
-	{% include 'login/modal.html.twig' %}
+  {% set _route = app.request.get('_route') %}
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a href="{{ path('app_home') }}" class="navbar-brand">
+        <img src="{{ asset('img/SkillShare.svg') }}" alt="SkillShare" />
+      </a>
+
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarContent"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ path('app_discover') }}">Découvrir</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ path('app_event_index') }}"
+              >Événements</a
+            >
+          </li>
+        </ul>
+
+        <div class="d-flex gap-3">
+          {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+          <a
+            href="{{ path('app_event_new') }}"
+            class="btn btn-action rounded-pill"
+            >Créer un événement</a
+          >
+          <a
+            href="{{ path('app_user') }}"
+            class="btn btn-outline-violet rounded-pill"
+            >Mon profil</a
+          >
+          <a
+            href="{{ path('app_logout') }}"
+            class="btn btn-connexion rounded-pill"
+            >Déconnexion</a
+          >
+          {% else %}
+          <button
+            class="btn btn-action rounded-pill"
+            data-bs-toggle="modal"
+            data-bs-target="#modalLogin"
+          >
+            Créer un événement
+          </button>
+          <button
+            class="btn btn-connexion rounded-pill"
+            data-bs-toggle="modal"
+            data-bs-target="#modalLogin"
+          >
+            Connexion
+          </button>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </nav>
+  {% include 'login/modal.html.twig' %}
 </header>

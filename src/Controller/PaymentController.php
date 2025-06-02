@@ -75,7 +75,7 @@ class PaymentController extends AbstractController
             ));
 
             $this->addFlash('success', 'Votre paiement a été accepté, un email de confirmation vous sera envoyé.');
-            return $this->redirectToRoute('app_event_index');
+            return $this->redirectToRoute('app_event_show', ['id' => $payment->getEvent()->getId()]);
         } catch (\Exception $e) {
             $this->addFlash('error', $e->getMessage());
             return $this->redirectToRoute('app_event_index');

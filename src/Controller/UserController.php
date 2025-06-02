@@ -41,6 +41,22 @@ final class UserController extends AbstractController
         // Déterminer si l'utilisateur est connecté via OAuth2
         $isOAuthUser = $user->isOAuth();
 
+        // Récupérer le fournisseur OAuth actuel depuis la session via AbstractOAuthAuthenticator
+        $currentOauthProvider = $request->getSession()->get('oauth_provider');
+
+        // Si pas de fournisseur en session mais utilisateur OAuth, prendre le premier disponible
+        if ($isOAuthUser && !$currentOauthProvider && !$user->getOauthConnections()->isEmpty()) {
+            $currentOauthProvider = $user->getOauthConnections()->first()->getProvider();
+        }
+
+        // Récupérer tous les fournisseurs OAuth liés à l'utilisateur
+        $connectedProviders = [];
+        if ($isOAuthUser) {
+            foreach ($user->getOauthConnections() as $connection) {
+                $connectedProviders[] = $connection->getProvider();
+            }
+        }
+
         // Formulaire de modification du profil (uniquement pour les utilisateurs non-OAuth)
         $form = null;
         if (!$isOAuthUser) {
@@ -92,26 +108,7 @@ final class UserController extends AbstractController
                 $this->addFlash('success', 'Votre mot de passe a été modifié avec succès.');
                 return $this->redirectToRoute('app_user');
             }
-
-            // Récupérer le fournisseur OAuth actuel depuis la session via AbstractOAuthAuthenticator
-            $currentOauthProvider = $request->getSession()->get('oauth_provider');
-
-            // Si pas de fournisseur en session mais utilisateur OAuth, prendre le premier disponible
-            if ($isOAuthUser && !$currentOauthProvider && !$user->getOauthConnections()->isEmpty()) {
-                $currentOauthProvider = $user->getOauthConnections()->first()->getProvider();
-            }
-
-            // Récupérer tous les fournisseurs OAuth liés à l'utilisateur
-            $connectedProviders = [];
-            if ($isOAuthUser) {
-                foreach ($user->getOauthConnections() as $connection) {
-                    $connectedProviders[] = $connection->getProvider();
-                }
-            }
         }
-
-        $currentOauthProvider = null;
-        $connectedProviders = [];
 
         return $this->render('user/index.html.twig', [
             'user' => $user,

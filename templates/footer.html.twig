@@ -1,26 +1,20 @@
 <footer class="bg-footer text-white py-4">
 	<div class="container-fluid">
-		<div class="row text-center text-md-start">
+		<div class="row text-center text-md-start align-items-center">
 			<div class="col-md-4 d-flex flex-column align-items-center mb-3">
 				<h5>SkillShare</h5>
 				<ul class="list-unstyled">
 					<li>
-						<a href="#" class="text-white text-decoration-none">Accueil</a>
+						<a href="{{ path('app_home') }}" class="text-white text-decoration-none">Accueil</a>
 					</li>
 					<li>
-						<a href="#" class="text-white text-decoration-none">Événements</a>
-					</li>
-					<li>
-						<a href="#" class="text-white text-decoration-none">À propos</a>
-					</li>
-					<li>
-						<a href="#" class="text-white text-decoration-none">Contact</a>
+						<a href="{{ path('app_event_index') }}" class="text-white text-decoration-none">Événements</a>
 					</li>
 				</ul>
 			</div>
 
 			<div class="col-md-4 d-flex flex-column align-items-center mb-3">
-				<h5>Contact</h5>
+				<h5 >Contact</h5>
 				<p class="mb-1">Email :
 					<a href="mailto:contact@skillshare.com" class="text-white">contact@skillshare.com</a>
 				</p>
@@ -32,13 +26,13 @@
 			<div class="col-md-4 d-flex flex-column align-items-center mb-3">
 				<h5>Suivez-nous</h5>
 				<a href="#" class="text-white">
-					<i class="bi bi-facebook"></i>
+					<i class="bi bi-facebook fs-3"></i>
 				</a>
 				<a href="#" class="text-white">
-					<i class="bi bi-twitter"></i>
+					<i class="bi bi-twitter fs-3"></i>
 				</a>
 				<a href="#" class="text-white">
-					<i class="bi bi-instagram"></i>
+					<i class="bi bi-instagram fs-3"></i>
 				</a>
 			</div>
 		</div>

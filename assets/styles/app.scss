@@ -1,7 +1,7 @@
-// @import "bootstrap/scss/utilities";
-// @import "bootstrap/scss/functions";
-// @import "bootstrap/scss/variables";
-// @import "bootstrap/scss/bootstrap";
+@font-face {
+  font-family: "Kaio";
+  src: url("../fonts/Kaio-Krilin.otf");
+}
 
 :root {
   /* Couleurs principales */
@@ -23,6 +23,9 @@
   --bs-secondary-rgb: 220, 221, 254;
   --bs-btn-primary-bg: var(--connexion-btn);
   --bs-body-color: var(--texte) !important;
+
+  /* Police */
+  --bs-body-font-family: "Kaio", sans-serif;
 }
 
 h1 {
@@ -35,6 +38,12 @@ h3 {
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--violet);
+}
+
+p {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-weight: 400;
+  color: var(--texte);
 }
 
 /* Bouton connexion */

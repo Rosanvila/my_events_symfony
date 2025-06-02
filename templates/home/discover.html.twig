@@ -11,7 +11,13 @@ endblock %} {% block body %}
           {% for category in categories %}
           <a
             href="{{ path('app_event_index', { category: category.id }) }}"
-            class="btn btn-outline-primary rounded-pill"
+            class="btn rounded-pill {{
+              loop.index % 3 == 0
+                ? 'btn-dark-violet'
+                : loop.index % 3 == 1
+                ? 'btn-orange'
+                : 'btn-violet'
+            }}"
           >
             {{ category.name }}
           </a>
@@ -41,7 +47,7 @@ endblock %} {% block body %}
                 </p>
                 <a
                   href="{{ path('app_event_show', { id: event.id }) }}"
-                  class="btn btn-primary"
+                  class="btn btn-action rounded-pill text-capitalize"
                   >Voir les détails</a
                 >
               </div>

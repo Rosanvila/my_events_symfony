@@ -11,9 +11,11 @@ use App\Repository\EventRepository;
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(): Response
+    public function index(EventRepository $eventRepository): Response
     {
-        return $this->render('home/index.html.twig');
+        return $this->render('home/index.html.twig', [
+            'featuredEvents' => $eventRepository->findUpcomingEvents(4)
+        ]);
     }
 
     #[Route('/discover', name: 'app_discover')]

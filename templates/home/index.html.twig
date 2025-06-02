@@ -83,61 +83,45 @@
       {% endif %}
     </div>
     <div class="container-fluid mt-5">
-      <ul class="row justify-content-center list-unstyled">
-        <li class="col-md-3 text-center">
-          <img
-            src="{{ asset('img/home/plant_photo.png') }}"
-            class="img-fluid my-4"
-            alt="plante 2"
-          />
-          <p>
-            Blablabla
-            <br />
-            blouloulou
-          </p>
-        </li>
-        <li class="col-md-3 text-center">
-          <img
-            src="{{ asset('img/home/pot.png') }}"
-            class="img-fluid my-4"
-            alt="Image 2"
-          />
-          <p>
-            Blablabla
-            <br />
-            blouloulou
-          </p>
-        </li>
-        <li class="col-md-3 text-center">
-          <img
-            src="{{ asset('img/home/speaking.png') }}"
-            class="img-fluid my-4"
-            alt="Image 3"
-          />
-          <p>
-            Blablabla
-            <br />
-            blouloulou
-          </p>
-        </li>
-        <li class="col-md-3 text-center">
-          <img
-            src="{{ asset('img/home/peinture_carre.png') }}"
-            class="img-fluid my-4"
-            alt="Image 4"
-          />
-          <p>
-            Blablabla
-            <br />
-            blouloulou
-          </p>
-        </li>
+      <div class="row justify-content-center g-4">
+        {% for event in featuredEvents %}
+        <div class="col-md-3">
+          <div class="card h-100 shadow-sm">
+            <img
+              src="{{ event.srcPhoto }}"
+              class="card-img-top event-image"
+              alt="{{ event.name }}"
+              style="height: 200px; object-fit: cover"
+            />
+            <div class="card-body">
+              <h5 class="card-title">{{ event.name }}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">
+                {{ event.category.name }}
+              </h6>
+              <p class="card-text">
+                <i class="bi bi-calendar-event"></i>
+                {{ event.startDate|date('d/m/Y H:i') }}<br />
+                <i class="bi bi-geo-alt"></i>
+                {{ event.location }}
+              </p>
+              <a
+                href="{{ path('app_event_show', { id: event.id }) }}"
+                class="btn btn-action rounded-pill w-100"
+              >
+                Voir les détails
+              </a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="text-center mt-5">
         <a
           href="{{ path('app_event_index') }}"
-          class="text-reset text-center fs-4 mt-5"
+          class="btn btn-outline-violet rounded-pill"
           >Voir tous les évènements</a
         >
-      </ul>
+      </div>
     </div>
     <img
       src="{{ asset('img/Layer_violet_star.svg') }}"
@@ -200,8 +184,10 @@
     <div class="container">
       <div class="row gx-5">
         <div class="col-md-6">
-          <h2>Rejoignez une communauté de passionnés et d'apprenants !</h2>
-          <p>
+          <h2 class="fw-bold mb-3">
+            Rejoignez une communauté de passionnés et d'apprenants !
+          </h2>
+          <p class="py-3">
             En vous inscrivant sur notre plateforme, vous entrez dans un espace
             où le partage de connaissances et l'échange d'idées sont au cœur de
             chaque événement. Que vous soyez ici pour apprendre ou pour

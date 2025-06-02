@@ -91,7 +91,6 @@ final class CreateEvent extends AbstractController
         $this->photoUploadError = $errors->get(0)->getMessage();
         $this->dispatchBrowserEvent('picture:changed', ["base64" => ""]);
 
-        // causes the component to re-render
         throw new UnprocessableEntityHttpException('Validation failed');
     }
 

@@ -47,7 +47,7 @@ stylesheets %}
 			</div>
 			<div class="col-md-5 py-3">
 				<img src="{{ event.srcPhoto }}" alt="Photo de l'événement" class="img-fluid rounded-5"/>
-				<div class="d-flex flex-column my-3 gap-3">
+				<div class="d-flex flex-column my-3 gap-3 align-items-start">
 					<div class="d-flex gap-3 align-items-center">
 						<img src="{{ asset('img/event/money.png') }}" alt="money" class="img-fluid"/>
 						<p class="fw-bold">
@@ -70,42 +70,47 @@ stylesheets %}
 							{{ event.location }}
 						</p>
 					</div>
-					<div class="d-flex gap-3 align-items-center border rounded-pill py-2 px-4" style="border-color: var(--bg-orange) !important">
-						<div class="d-flex gap-3 align-items-center">
-							<p class="text-capitalize">nombre de places :</p>
-							<div>
+					<div class="d-flex justify-content-between align-items-center border rounded-pill py-2 px-4 gap-3" style="border-color: var(--bg-orange) !important">
+						<div class="d-flex align-items-center gap-3">
+							<p class="text-capitalize mb-0">Places :</p>
+							<p class="mb-0">
 								{% if app.user %}
 									{{ event.participants | length }}/{{ event.maxParticipants }}
 								{% endif %}
-							</div>
+							</p>
 						</div>
 						{% if app.user %}
-							{% set isParticipant = false %}
-							{% for participation in event.participants %}
-								{% if participation.user.id == app.user.id %}
-									{% set isParticipant = true %}
-								{% endif %}
-							{% endfor %}
-
-							{% if not isParticipant and event.participants | length < event.maxParticipants %}
-								{% if event.isPaid %}
-									<button type="button" class="btn btn-action rounded-pill text-capitalize" onclick="handlePayment()">
-										Payer et réserver
+							{% if app.user.id != event.organizer.id %}
+								{% set isParticipant = false %}
+								{% for participation in event.participants %}
+									{% if participation.user.id == app.user.id %}
+										{% set isParticipant = true %}
+									{% endif %}
+								{% endfor %}
+								{% if not isParticipant and event.participants | length < event.maxParticipants %}
+									{% if event.isPaid %}
+										<button type="button" class="btn btn-action rounded-pill text-capitalize" onclick="handlePayment()">
+											Payer et réserver
+										</button>
+									{% else %}
+										<form action="{{ path('app_participation_reserve', { id: event.id }) }}" method="POST" class="d-inline">
+											<button type="submit" class="btn btn-action rounded-pill text-capitalize">
+												Réserver
+											</button>
+										</form>
+									{% endif %}
+								{% elseif isParticipant %}
+									<button class="btn btn-action rounded-pill text-capitalize" disabled>
+										Déjà inscrit
 									</button>
 								{% else %}
-									<form action="{{ path('app_participation_reserve', { id: event.id }) }}" method="POST" class="d-inline">
-										<button type="submit" class="btn btn-action rounded-pill text-capitalize">
-											Réserver
-										</button>
-									</form>
+									<button class="btn btn-action rounded-pill text-capitalize" disabled>
+										Complet
+									</button>
 								{% endif %}
-							{% elseif isParticipant %}
-								<button class="btn btn-action rounded-pill text-capitalize" disabled>
-									Déjà inscrit
-								</button>
 							{% else %}
 								<button class="btn btn-action rounded-pill text-capitalize" disabled>
-									Complet
+									Organisateur
 								</button>
 							{% endif %}
 						{% else %}
@@ -117,9 +122,9 @@ stylesheets %}
 				</div>
 			</div>
 		</div>
-		<a href="{{ path('app_event_index') }}">back to list</a>
-		<a href="{{ path('app_event_edit', { id: event.id }) }}">edit</a>
+		<a href="{{ path('app_event_index') }}" class="btn btn-violet rounded-pill text-capitalize mb-2">Retour</a>
 		{% if app.user and app.user.id == event.organizer.id %}
+			<a href="{{ path('app_event_edit', { id: event.id }) }}" class="btn btn-violet rounded-pill text-capitalize mb-2">Modifier</a>
 			{{ include("event/_delete_form.html.twig") }}
 		{% endif %}
 	</section>
