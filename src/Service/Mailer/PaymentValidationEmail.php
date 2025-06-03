@@ -14,16 +14,16 @@ class PaymentValidationEmail
     private Address|string|null $senderAddress;
 
     public function __construct(
-        #[Autowire(env: 'PAYMENT_VALIDATION_SUBJECT')] private readonly string $subject,
-        #[Autowire(env: 'AUTH_CODE_SENDER_EMAIL')] string|null $senderEmail,
-        #[Autowire(env: 'AUTH_CODE_SENDER_NAME')] ?string $senderName = null,
-        private readonly PdfGenerator $pdfGenerator,
         private readonly MailerInterface $mailer,
+        private readonly PdfGenerator $pdfGenerator,
+        #[Autowire(env: 'PAYMENT_VALIDATION_SUBJECT')] private readonly string $subject,
+        #[Autowire(env: 'AUTH_CODE_SENDER_EMAIL')] private readonly ?string $senderEmail = null,
+        #[Autowire(env: 'AUTH_CODE_SENDER_NAME')] private readonly ?string $senderName = null
     ) {
-        if (null !== $senderEmail && null !== $senderName) {
-            $this->senderAddress = new Address($senderEmail, $senderName);
-        } elseif (null !== $senderEmail) {
-            $this->senderAddress = $senderEmail;
+        if (null !== $this->senderEmail && null !== $this->senderName) {
+            $this->senderAddress = new Address($this->senderEmail, $this->senderName);
+        } elseif (null !== $this->senderEmail) {
+            $this->senderAddress = $this->senderEmail;
         }
     }
 
