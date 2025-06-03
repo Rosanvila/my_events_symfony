@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{% block title %}Welcome! {% endblock %}</title>
     <link
       rel="icon"
@@ -24,10 +25,10 @@
     }}
     {% endblock %} {% endblock %}
   </head>
-  <body>
+  <body class="d-flex flex-column min-vh-100">
     {% block header %} {% include 'header.html.twig' %} {% endblock %}
 
-    <main>{% block body %}{% endblock %}</main>
+    <main class="flex-grow-1">{% block body %}{% endblock %}</main>
 
     {% block footer %} {% include 'footer.html.twig' %} {% endblock %}
   </body>
