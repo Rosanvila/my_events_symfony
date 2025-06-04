@@ -63,11 +63,22 @@ final class EventSearch
     }
 
     #[LiveAction]
-    public function search(): void {}
+    public function search(): void
+    {
+        // La méthode est vide car elle est utilisée uniquement pour déclencher la mise à jour du composant
+    }
 
     public function getEvents(): array
     {
-        $startDate = $this->startDate ? new \DateTimeImmutable($this->startDate, new \DateTimeZone('UTC')) : null;
+        $startDate = null;
+        if ($this->startDate && trim($this->startDate) !== '') {
+            try {
+                $startDate = new \DateTimeImmutable($this->startDate, new \DateTimeZone('UTC'));
+            } catch (\Exception $e) {
+                // Si la date n'est pas valide, on l'ignore
+                $startDate = null;
+            }
+        }
 
         return $this->eventRepository->search([
             'name' => $this->sanitizeInput($this->name),

@@ -16,6 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use DateTimeImmutable;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Table(name: '"user"')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFactorEmailInterface
 {
     public function isEmailAuthEnabled(): bool

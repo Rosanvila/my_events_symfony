@@ -61,12 +61,14 @@ class EventRepository extends ServiceEntityRepository
                 ->setParameter('startDate', $data['startDate']);
         }
 
-        if (!empty($data['category'])) {
+        if ($data['category'] !== null) {
             $qb->andWhere('c.id = :categoryId')
                 ->setParameter('categoryId', $data['category']->getId());
         }
 
-        return $qb->getQuery()->getResult();
+        return $qb->orderBy('e.startDate', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 
     public function findUpcomingEvents(int $limit = 6): array
