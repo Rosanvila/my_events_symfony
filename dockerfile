@@ -33,12 +33,12 @@ COPY composer.json composer.lock ./
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 
 
+# Installer/configurer Symfony Runtime manuellement (avant toute commande Symfony)
+RUN composer require symfony/runtime --no-scripts || echo "Runtime already installed"
+
+
 # Maintenant copier tout le reste
 COPY . .
-
-
-# Installer/configurer Symfony Runtime manuellement
-RUN composer require symfony/runtime --no-scripts || echo "Runtime already installed"
 
 
 # Installer les assets JS (importmap)
