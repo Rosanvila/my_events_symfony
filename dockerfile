@@ -22,20 +22,20 @@ WORKDIR /var/www/html
 # Copier TOUT le projet d'abord
 COPY . .
 
-# Installer les dépendances PHP (SANS --no-scripts pour permettre au runtime de se configurer)
-RUN composer install --no-dev --optimize-autoloader
+# Installer les dépendances PHP (avec --no-scripts pour éviter l'erreur symfony-cmd)
+RUN composer install --no-dev --optimize-autoloader --no-scripts
 
 # Créer un script de démarrage
 RUN echo '#!/bin/bash\n\
-set -e\n\
-composer dump-autoload --optimize --no-dev\n\
-php bin/console importmap:install || echo "Importmap install failed, continuing..."\n\
-php bin/console asset-map:compile || echo "Asset compilation failed, continuing..."\n\
-php bin/console sass:build || echo "Sass build failed, continuing..."\n\
-php bin/console cache:clear --env=prod --no-debug || echo "Cache clear failed, continuing..."\n\
-php bin/console cache:warmup --env=prod --no-debug || echo "Cache warmup failed, continuing..."\n\
-php bin/console doctrine:migrations:migrate --no-interaction --env=prod || echo "Migrations failed, continuing..."\n\
-php -S 0.0.0.0:8000 -t public' > /start.sh && chmod +x /start.sh
+    set -e\n\
+    composer dump-autoload --optimize --no-dev\n\
+    php bin/console importmap:install || echo "Importmap install failed, continuing..."\n\
+    php bin/console asset-map:compile || echo "Asset compilation failed, continuing..."\n\
+    php bin/console sass:build || echo "Sass build failed, continuing..."\n\
+    php bin/console cache:clear --env=prod --no-debug || echo "Cache clear failed, continuing..."\n\
+    php bin/console cache:warmup --env=prod --no-debug || echo "Cache warmup failed, continuing..."\n\
+    php bin/console doctrine:migrations:migrate --no-interaction --env=prod || echo "Migrations failed, continuing..."\n\
+    php -S 0.0.0.0:8000 -t public' > /start.sh && chmod +x /start.sh
 
 # Exposer le port
 EXPOSE 8000
