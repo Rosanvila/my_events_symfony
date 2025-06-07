@@ -7,6 +7,9 @@ knpu_oauth2_client:
             redirect_route: auth_oauth_check
             redirect_params:
                 service: google
+            use_state: true
+            access_type: offline
+            hosted_domain: 'my-events-symfony.onrender.com'
         facebook:
             type: facebook
             client_id: '%env(OAUTH_FACEBOOK_CLIENT_ID)%'
