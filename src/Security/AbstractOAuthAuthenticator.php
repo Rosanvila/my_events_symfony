@@ -66,7 +66,16 @@ abstract class AbstractOAuthAuthenticator extends OAuth2Authenticator
 
     public function authenticate(Request $request): SelfValidatingPassport
     {
-        $credentials = $this->fetchAccessToken($this->getClient());
+        $client = $this->getClient();
+
+        // Forcer l'URL de redirection en HTTPS
+        $redirectUri = $this->router->generate('auth_oauth_check', ['service' => $this->serviceName], RouterInterface::ABSOLUTE_URL);
+        $redirectUri = str_replace('http://', 'https://', $redirectUri);
+
+        $credentials = $this->fetchAccessToken($client, [
+            'redirect_uri' => $redirectUri
+        ]);
+
         $resourceOwner = $this->getResourceOwnerFromCredentials($credentials);
         $user = $this->getUserFromResourceOwner($resourceOwner, $this->repository);
 
@@ -81,6 +90,7 @@ abstract class AbstractOAuthAuthenticator extends OAuth2Authenticator
             ]
         );
     }
+
     public function createToken(Passport $passport, string $firewallName): TokenInterface
     {
         $token = parent::createToken($passport, $firewallName);
