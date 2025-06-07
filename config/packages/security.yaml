@@ -41,6 +41,11 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+
+        # Routes de Oauth2
+        - { path: ^/connect, requires_channel: https }
+        - { path: ^/oauth, requires_channel: https }
+
         # Routes publiques
         - { path: ^/event$, roles: PUBLIC_ACCESS }
         - { path: ^/event/\d+$, roles: PUBLIC_ACCESS }

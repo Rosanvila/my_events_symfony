@@ -10,6 +10,10 @@ framework:
     #esi: true
     #fragments: true
 
+    trusted_proxies: '127.0.0.1,REMOTE_ADDR'
+    trusted_headers:
+        X-Forwarded-Proto: true
+
 when@test:
     framework:
         test: true
