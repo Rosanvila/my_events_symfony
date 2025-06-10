@@ -38,12 +38,8 @@ RUN echo '#!/bin/bash\n\
     echo "=== Checking migrations status ==="\n\
     php bin/console doctrine:migrations:status --env=prod\n\
     echo "=== Running migrations ==="\n\
-    # Exécuter d\'abord la migration qui crée les tables\n\
-    php bin/console doctrine:migrations:migrate DoctrineMigrations\\Version20250603163732 --no-interaction --env=prod\n\
-    # Puis exécuter la migration qui insère les données\n\
-    php bin/console doctrine:migrations:migrate DoctrineMigrations\\Version20250603165110 --no-interaction --env=prod\n\
-    # Enfin, exécuter la dernière migration\n\
-    php bin/console doctrine:migrations:migrate DoctrineMigrations\\Version20250603165109 --no-interaction --env=prod\n\
+    # Exécuter toutes les migrations dans l\'ordre\n\
+    php bin/console doctrine:migrations:migrate --no-interaction --env=prod\n\
     echo "=== Migrations completed successfully ==="\n\
     echo "=== Starting PHP server ==="\n\
     php -S 0.0.0.0:8000 -t public' > /start.sh && chmod +x /start.sh
