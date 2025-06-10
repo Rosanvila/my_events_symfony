@@ -41,6 +41,15 @@ RUN echo '#!/bin/bash\n\
     # Exécuter toutes les migrations dans l\'ordre\n\
     php bin/console doctrine:migrations:migrate --no-interaction --env=prod\n\
     echo "=== Migrations completed successfully ==="\n\
+    echo "=== Starting Messenger consumer in background ==="\n\
+    # Démarrer le consumer avec une meilleure gestion des erreurs et des logs\n\
+    while true; do\n\
+    php bin/console messenger:consume async --env=prod --time-limit=3600 --memory-limit=256M --limit=1000 --failure-limit=10 --sleep=1000 2>&1 | tee -a /var/log/messenger.log\n\
+    if [ $? -ne 0 ]; then\n\
+    echo "Consumer crashed, restarting in 5 seconds..." >> /var/log/messenger.log\n\
+    sleep 5\n\
+    fi\n\
+    done &\n\
     echo "=== Starting PHP server ==="\n\
     php -S 0.0.0.0:8000 -t public' > /start.sh && chmod +x /start.sh
 
