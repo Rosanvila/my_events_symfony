@@ -1,3 +1,15 @@
+## Site déployé à l'adresse suivante :
+https://my-events-symfony.onrender.com/
+
+## Réservation d'évènements payants :
+Les évènements payants sont à payer avec des fausses cartes de crédit.
+Utilisez pour les numéros de carte via https://docs.stripe.com/testing?locale=fr-FR&testing-method=card-numbers
+Par ex : 4242424242424242 et 3 chiffres aléatoires pour le CVC.
+et une date postérieure à la date du jour.
+
+
+
+
 ## Commandes utiles
 
 ### Compiler Sass
