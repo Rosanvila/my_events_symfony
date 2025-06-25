@@ -49,19 +49,6 @@ final class EventSearch
         $this->category = null;
     }
 
-    public function sanitizeInput(?string $input): ?string
-    {
-        if ($input === null) {
-            return null;
-        }
-
-        $string = new UnicodeString($input);
-
-        $string = $string->trim();
-
-        return htmlspecialchars($string->toString(), ENT_QUOTES, 'UTF-8');
-    }
-
     #[LiveAction]
     public function search(): void
     {
@@ -74,18 +61,28 @@ final class EventSearch
         if ($this->startDate && trim($this->startDate) !== '') {
             try {
                 $startDate = new \DateTimeImmutable($this->startDate, new \DateTimeZone('UTC'));
+
+                // Validation de la date (pas plus de 2 ans dans le futur)
+                $maxDate = new \DateTimeImmutable('+2 years');
+                if ($startDate > $maxDate) {
+                    $startDate = null;
+                }
             } catch (\Exception $e) {
                 // Si la date n'est pas valide, on l'ignore
                 $startDate = null;
             }
         }
 
-        return $this->eventRepository->search([
-            'name' => $this->sanitizeInput($this->name),
-            'location' => $this->sanitizeInput($this->location),
+        // Limiter le nombre de résultats pour éviter les attaques par déni de service
+        $searchParams = [
+            'name' => $this->name ? trim($this->name) : null,
+            'location' => $this->location ? trim($this->location) : null,
             'startDate' => $startDate,
             'category' => $this->category,
-        ]);
+            'limit' => 50, // Limiter à 50 résultats max
+        ];
+
+        return $this->eventRepository->search($searchParams);
     }
 
     public function getCategories(): array

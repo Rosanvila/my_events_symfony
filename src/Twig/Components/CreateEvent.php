@@ -121,6 +121,7 @@ final class CreateEvent extends AbstractController
         $entityManager->persist($this->event);
         $entityManager->flush();
 
+        $this->addFlash('success', 'Votre événement a été créé avec succès !');
         return $this->redirectToRoute('app_event_index');
     }
 }
