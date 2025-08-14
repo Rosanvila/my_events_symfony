@@ -1,0 +1,162 @@
+{% extends 'base.html.twig' %} {% block title %}Mentions légales - My Events{%
+endblock %} {% block body %}
+<div class="container my-5">
+  <div class="row">
+    <div class="col-lg-10 mx-auto">
+      <h1 class="mb-4">Mentions légales</h1>
+
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h2 class="h4 mb-3">1. Éditeur du site</h2>
+          <p>
+            <strong>SkillShare</strong><br />
+            Application web de gestion et de participation aux événements
+          </p>
+
+          <p>
+            <strong>Adresse :</strong><br />
+            Tours, France
+          </p>
+
+          <p>
+            <strong>Contact :</strong><br />
+            Email : robin.sa28@gmail.com<br />
+            Téléphone : 06 66 33 20 17
+          </p>
+        </div>
+      </div>
+
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h2 class="h4 mb-3">2. Hébergement</h2>
+          <p>
+            Ce site est hébergé par :<br />
+            Render.com<br />
+          </p>
+        </div>
+      </div>
+
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h2 class="h4 mb-3">3. Propriété intellectuelle</h2>
+          <p>
+            L'ensemble de ce site relève de la législation française et
+            internationale sur le droit d'auteur et la propriété intellectuelle.
+            Tous les droits de reproduction sont réservés, y compris pour les
+            documents téléchargeables et les représentations iconographiques et
+            photographiques.
+          </p>
+
+          <p>
+            La reproduction de tout ou partie de ce site sur un support
+            électronique quel qu'il soit est formellement interdite sauf
+            autorisation expresse du directeur de la publication.
+          </p>
+        </div>
+      </div>
+
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h2 class="h4 mb-3">4. Protection des données personnelles</h2>
+          <p>
+            Conformément à la loi n° 78-17 du 6 janvier 1978 modifiée et au
+            Règlement Général sur la Protection des Données (RGPD), vous
+            disposez d'un droit d'accès, de rectification, de suppression et
+            d'opposition aux données personnelles vous concernant.
+          </p>
+
+          <p>
+            Pour exercer ces droits, vous pouvez nous contacter à l'adresse
+            email suivante : robin.sa28@gmail.com
+          </p>
+
+          <p>Les données collectées sur ce site sont destinées à :</p>
+          <ul>
+            <li>La gestion de votre compte utilisateur</li>
+            <li>L'organisation et la participation aux événements</li>
+            <li>L'envoi d'informations relatives aux événements</li>
+            <li>L'amélioration de nos services</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h2 class="h4 mb-3">5. Cookies</h2>
+          <p>
+            Ce site utilise uniquement des cookies techniques essentiels pour :
+          </p>
+          <ul>
+            <li>La gestion de votre session de connexion</li>
+            <li>La protection contre les attaques CSRF</li>
+            <li>L'authentification OAuth2 (Google/Facebook)</li>
+          </ul>
+          <p>
+            Ces cookies sont nécessaires au bon fonctionnement de l'application
+            et ne peuvent pas être désactivés. Aucun cookie de tracking ou
+            d'analyse n'est utilisé.
+          </p>
+        </div>
+      </div>
+
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h2 class="h4 mb-3">6. Liens hypertextes</h2>
+          <p>
+            Les liens hypertextes mis en place dans le cadre du présent site web
+            en direction d'autres ressources présentes sur le réseau Internet ne
+            sauraient engager la responsabilité de SkillShare.
+          </p>
+        </div>
+      </div>
+
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h2 class="h4 mb-3">7. Responsabilité</h2>
+          <p>
+            Les informations contenues sur ce site sont aussi précises que
+            possible et le site est périodiquement remis à jour, mais peut
+            toutefois contenir des inexactitudes, des omissions ou des lacunes.
+          </p>
+
+          <p>
+            Si vous constatez une lacune, erreur ou ce qui parait être un
+            dysfonctionnement, merci de bien vouloir le signaler par email à
+            l'adresse robin.sa28@gmail.com en décrivant le problème de la
+            manière la plus précise possible.
+          </p>
+        </div>
+      </div>
+
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h2 class="h4 mb-3">8. Droit applicable</h2>
+          <p>
+            Tout litige en relation avec l'utilisation du site SkillShare est
+            soumis au droit français. En dehors des cas où la loi ne le permet
+            pas, il est fait attribution exclusive de juridiction aux tribunaux
+            compétents de Tours.
+          </p>
+        </div>
+      </div>
+
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h2 class="h4 mb-3">9. Modifications des mentions légales</h2>
+          <p>
+            SkillShare se réserve le droit de modifier ces mentions légales à
+            tout moment. L'utilisateur est invité à les consulter de manière
+            régulière.
+          </p>
+        </div>
+      </div>
+
+      <div class="text-center mt-4">
+        <p class="text-muted">
+          <small>Dernière mise à jour : {{ "now"|date("d/m/Y") }}</small>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
